@@ -10,9 +10,9 @@
     section 기술개발
     메인 페이지      :a2, 2024-06-07  , 2d
     검색 기능       :after a2, 3d
-    회원 가입 / 로그인 :a3, after a2, 3d
-    제품 상세 페이지/장바구니 :a4, after a3, 2d
-    상품 주문 / 결제 :a5, after a4, 3d
+    회원가입/로그인 :a3, after a2, 3d
+    상세페이지/장바구니 :a4, after a3, 2d
+    상품주문/결제 :a5, after a4, 3d
     추가 기능 개발 : after a5, 3d
     section 문서 작성
     발표 준비 : 2024-06-20, 2d

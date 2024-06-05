@@ -21,5 +21,6 @@ import account.views as account_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', account_view.register,name='register'),
-    path('login/', account_view.user_login, name='user_login')
+    path('login/', account_view.user_login, name='user_login'),
+    path('openapi/', include('openapi.urls', 'openapi', namespace='openapi')),
 ]

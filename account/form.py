@@ -2,8 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
-    username= forms.CharField(label="아이디", widget=forms.TextInput)
-    password = forms.CharField(label="비밀번호", widget=forms.PasswordInput)
+    username= forms.CharField(label="ID", widget=forms.TextInput(attrs={'class': 'id_input'}))
+    password = forms.CharField(label="PW", widget=forms.PasswordInput(attrs={'class': 'id_input'}))
 
 class UserRegisterForm(forms.ModelForm): #회원 가입 form
     password = forms.CharField(label="비밀번호", widget=forms.PasswordInput)  #비밀번호

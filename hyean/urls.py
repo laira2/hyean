@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import account.views as account_view
+import openapi.views as openapi_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', account_view.register,name='register'),
     path('login/', account_view.user_login, name='user_login'),
-    path('openapi/', include('openapi.urls', 'openapi', namespace='openapi')),
+    path('openapi/', openapi_view.openapi, name='openapi'),
 ]

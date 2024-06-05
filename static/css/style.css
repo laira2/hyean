@@ -1,0 +1,256 @@
+@charset "utf-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+#container {
+    width: 100%
+}
+
+
+/* header 영역!!!!========================================== */
+
+#header {
+    width: 100%;
+    height: 80px;
+    /* background-color: #ff000020; */
+    padding: 40px 0 0 42px;
+    box-sizing: border-box;
+}
+
+.header_wrap {
+    width: 100%;
+    margin: auto;
+    /* background-color: #ff000020; */
+    display: flex;
+    justify-content: space-between;
+}
+
+h2 a {
+    display: block;
+    font-family: "Libre Barcode 128 Text", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+    color: black;
+    font-size: 35px;
+}
+
+.search_wrap {
+    width: 700px;
+    position: relative;
+    float: left;
+}
+
+.search_wrap form {
+    width: 100%;
+}
+
+.search_icon {
+    font-size: 15px;
+    position: absolute;
+    top: 7px;
+    left: 6px;
+    z-index: 1;
+}
+
+.search_wrap input {
+    width: 100%;
+    height: 30px;
+    border: 2px solid;
+    border-radius: 45px;
+    position: absolute;
+    padding-left: 22px;
+    box-sizing: border-box;
+}
+
+.account {
+    width: 150px;
+    float: left;
+}
+
+.account ul {
+    text-align: center;
+}
+
+.account ul li {
+    font-size: 25px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.account ul li a {
+    display: block;
+    color: black;
+}
+
+
+/* nav 영역!!!!!!!!!================================================================================ */
+
+.hastag {}
+
+.hastag ul {
+    text-align: center;
+}
+
+.hastag ul li {
+    display: inline-block
+}
+
+.hastag ul li a {
+    display: block;
+    letter-spacing: 2px;
+    margin: 0 15px;
+    font-size: 20px;
+    font-family: "Asul", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: black;
+    margin-bottom: 30px;
+}
+
+/* section 영역!!!!!!!!!================================================================================ */
+
+
+.section_wrap {
+    height: 500px;
+    background-color: #ffff0020;
+}
+
+/* footer 영역!!!!!!!!!================================================================================ */
+
+.footer_wrap {
+    border-top: 3px solid #cccccc;
+}
+
+.footer_wrap ul {
+    text-align: center;
+}
+
+.footer_wrap ul li {
+    display: inline-block;
+    margin: 10px;
+    font-size: 20px;
+}
+
+.footer_wrap ul li a {
+    color: #515151;
+    word-spacing: 10px;
+}
+
+.footer_content {
+    width: 420px;
+    text-align: center;
+    margin: auto;
+}
+
+.footer_content p {
+    text-align: left;
+    color: #867D7D
+}
+
+.footer_content p span {
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
+    word-spacing: 10px;
+}
+
+
+/* signup 페이지 (로그인 폼) */
+
+.login_container {
+    width: 100%;
+    height: 700px;
+    background-color: #ffff0020;
+
+    padding-top: 150px;
+    box-sizing: border-box;
+}
+
+.login_wrap {
+    width: 600px;
+    height: 300px;
+    margin: auto;
+    border: 3px solid black;
+    border-radius: 45px;
+    position: relative;
+}
+
+.login_wrap h2 {
+    position: absolute;
+    text-align: center;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login_wrap form {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: absolute;
+    top: 30%;
+    font-size: 25px;
+    letter-spacing: 2px;
+}
+
+.login_wrap form p {
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    
+}
+
+.login_form {
+    text-align: right;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+.login_wrap form input {
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding-left: 5px;
+    box-sizing: border-box;
+    margin-left: 10px;
+}
+
+.login_btn_box {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.login_btn,
+.back_btn {
+    width: 95px;
+    height: 25px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+.login_btn {
+    background-color: #2FB20F;
+    color: #fff;
+}
+
+.login_btn:hover {
+    color: gold;
+}

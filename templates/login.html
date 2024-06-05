@@ -1,15 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form method="post">
-    {{ login_form.as_p }}
-    {% csrf_token %}
-    <input type="submit" value="로그인">
-</form>
+{% extends 'index.html' %}
 
-</body>
-</html>
+{% block content %}
+    <div class="login_container">
+        <div class="login_wrap">
+            <h2 class="logo">
+                    <a href="#">In site Art Gallery</a>
+            </h2>
+            <form method="post">
+                <div class="login_form">
+                    {{ login_form.as_p }}
+                    {% csrf_token %}
+                    <div class="login_btn_box">
+                        <button class="login_btn" type="submit">로그인</button>
+                        <button class="back_btn">돌아가기</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

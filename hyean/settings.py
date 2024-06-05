@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'account'
-    'openapi.apps.OpenapiConfig',
+    'account',
+    'openapi',
 ]
 
 MIDDLEWARE = [

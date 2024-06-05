@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art List</title>
+</head>
+<body>
+    <h1>Art List</h1>
+    <ul>
+        {% for image_info in image_info_list %}
+            <li>
+                <strong>작품명:</strong> {{ image_info.art_name }}<br>
+                <strong>작품가격:</strong> {{ image_info.price }}<br>
+                <strong>파일명:</strong> {{ image_info.file_name|slice:":4" }}<br> <!-- 파일명에서 앞 4글자만 출력 -->
+                <strong>파일 URL:</strong> <a href="{{ image_info.file_url }}">{{ image_info.file_url }}</a>
+                <br><br>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

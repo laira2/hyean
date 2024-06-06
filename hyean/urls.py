@@ -4,7 +4,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from openapi.views import openapi_view  # 수정된 부분
-from account import views as account_views
+from user_account import views as account_views
 
 schema_view = get_schema_view(
     openapi.Info(

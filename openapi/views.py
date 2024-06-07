@@ -206,5 +206,3 @@ async def openapi_view(request):
 
     image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
     return render(request, 'openapi.html', {'image_info_list': image_info_list})
-    #
->>>>>>> 15eb2b9a57a6374a0ab4842119a6c4990606e8ee

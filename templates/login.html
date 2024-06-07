@@ -13,6 +13,18 @@
                     <div class="login_btn_box">
                         <button class="login_btn" type="submit">로그인</button>
                         <button class="back_btn">돌아가기</button>
+                        {% load socialaccount %}
+
+                        <button type="button" onclick="location.href = '{% provider_login_url 'kakao' %}'">
+                                <img class = "kakao" src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" alt="" >
+                        </button>
+                        <button type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
+                                네이버
+                        </button>
+                        <button type="button" onclick="location.href = '{% provider_login_url 'google' %}'">
+                                구글
+                        </button>
+
                     </div>
                 </div>
             </form>

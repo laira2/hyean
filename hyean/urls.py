@@ -29,8 +29,4 @@ urlpatterns = [
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('login/', account_views.user_login, name='user_login'),
     path('signup/', account_views.signup, name="signup")
-<<<<<<< HEAD
 ]
-=======
-]
->>>>>>> 15eb2b9a57a6374a0ab4842119a6c4990606e8ee

@@ -1,0 +1,103 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<section id="signup_section">
+            <div class="signup_container">
+                <div class="signup_wrap">
+                    <h2 class="logo">
+                        <a href="#">In site Art Gallery</a>
+                    </h2>
+                    <form action="#" method="post" id="signup_form">
+                        {% csrf_token %}
+
+                        <div class="signup_id_box">
+                            {{ signup_form.username }}
+                            <button>중복확인</button>
+                        </div>
+
+                        <div class="signup_password_box">
+                            {{ signup_form.password }}
+                        </div>
+
+                        <div class="password_check_box">
+                            {{ signup_form.password_check }}
+                        </div>
+
+                        <div class="signup_email_box">
+                            {{ signup_form.email }}@
+                            {{ signup_form.domain }}
+                        </div>
+
+                        <div class="signup_phone_box">
+                            {{ signup_form.phone1 }}-
+                            {{ signup_form.phone2 }}-
+                            {{ signup_form.phone3 }}
+                        </div>
+
+                        <div class="signup_address_box">
+                            {{ signup_form.address }}
+                        </div>
+
+
+
+
+<!--                        <div class="signup_id_box">-->
+<!--                            <label for="username"></label>-->
+<!--                            <input type="text" id="username" name="username" required placeholder="아이디를 입력하세요.">-->
+<!--                            <button>중복확인</button>-->
+<!--                        </div>-->
+
+<!--                        <div class="signup_password_box">-->
+<!--                            <label for="password"></label>-->
+<!--                            <input type="password" id="password" name="password" required-->
+<!--                                placeholder="비밀번호를 입력하세요"><br><br>-->
+<!--                        </div>-->
+
+<!--                        <div class="password_check_box">-->
+<!--                            <label></label>-->
+<!--                            <input type="password" id="password_check" name="password_check" required placeholder="비밀번호를 다시 입력해주세요"><br><br>-->
+<!--                        </div>-->
+
+<!--                        <div class="signup_email_box">-->
+<!--                            <label></label>-->
+<!--                            <input type="text" name="email" class="signup_email" required placeholder="이메일을 입력해주세요">@-->
+<!--                            <select name="domain" id="domain">-->
+<!--                                <option>naver.com</option>-->
+<!--                                <option>daum.com</option>-->
+<!--                                <option>gmail.com</option>-->
+<!--                                <option>yahoo.com</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+
+<!--                        <div class="signup_phone_box">-->
+<!--                            <label></label>-->
+<!--                            <input type="tel" class="signup_phone" name="phone" required>-<input type="tel"-->
+<!--                                class="signup_phone">-<input type="tel" class="signup_phone"><br><br>-->
+<!--                        </div>-->
+
+<!--                        <div class="signup_address_box">-->
+<!--                            <label for="address"></label>-->
+<!--                            <input type="text" id="address" name="address" required placeholder="주소를 입력해주세요">-->
+<!--                            <button>우편번호검색</button><br><br>-->
+<!--                        </div>-->
+
+<!--                        <div class="signup_address_detail_box">-->
+<!--                            <label for="detail_address"></label>-->
+<!--                            <input type="text" id="detail_address" name="detail_address" placeholder="상세주소를 입력해주세요"><br><br>-->
+<!--                        </div>-->
+
+                        <div class="signup_btn_box">
+                            <button>회원가입</button>
+                            <button>돌아가기</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+{% endblock %}

@@ -6,10 +6,25 @@ class LoginForm(forms.Form):
     password = forms.CharField(label="PW", widget=forms.PasswordInput(attrs={'class': 'id_input'}))
 
 class UserRegisterForm(forms.ModelForm): #회원 가입 form
-    password = forms.CharField(label="비밀번호", widget=forms.PasswordInput)  #비밀번호
-    passwordcheck = forms.CharField(label="비밀번호 확인", widget=forms.PasswordInput) # 비밀 번호 확인
-    address = forms.CharField(label="주소", widget=forms.TextInput)
-    
+    username = forms.CharField(label='', max_length=100, widget=forms.TextInput(
+        attrs={'id': 'username', 'placeholder': '아이디를 입력하세요.', 'required': True}))
+    password = forms.CharField(label='', widget=forms.PasswordInput(
+        attrs={'id': 'password', 'placeholder': '비밀번호를 입력하세요', 'required': True}))
+    password_check = forms.CharField(label='', widget=forms.PasswordInput(
+        attrs={'id': 'password_check', 'placeholder': '비밀번호를 다시 입력해주세요', 'required': True}))
+    email = forms.EmailField(label='', widget=forms.TextInput(
+        attrs={'class': 'signup_email', 'placeholder': '이메일을 입력해주세요', 'required': True}))
+    domain = forms.ChoiceField(
+        choices=[('naver.com', 'naver.com'), ('daum.com', 'daum.com'), ('gmail.com', 'gmail.com'),
+                 ('yahoo.com', 'yahoo.com')], widget=forms.Select(attrs={'id': 'domain'}))
+    phone1 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
+    phone2 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
+    phone3 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
+    address = forms.CharField(label='', widget=forms.TextInput(
+        attrs={'id': 'address', 'placeholder': '주소를 입력해주세요', 'required': True}))
+    detail_address = forms.CharField(label='', required=False, widget=forms.TextInput(
+        attrs={'id': 'detail_address', 'placeholder': '상세주소를 입력해주세요'}))
+
     class Meta: #form 설정
         model = User  # User model연동
         fields = ['username', 'first_name','last_name', 'email', ] #User model에서 사용할 field 설정.

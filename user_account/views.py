@@ -23,14 +23,14 @@ def user_login(request):
     return render(request,'login.html', {'login_form':login_form})
 
 
-def register(request): #회원가입
+def signup(request): #회원가입
     if request.method == "POST":
-        register_form = UserRegisterForm(request.POST)
-        if register_form.is_valid():
-            new_user = register_form.save(commit=False)
-            new_user.set_password(register_form.cleaned_data['password'])
+        signup_form = UserRegisterForm(request.POST)  # register_form 을 signup_form으로 이름 바꿔주기
+        if signup_form.is_valid():
+            new_user = signup_form.save(commit=False)
+            new_user.set_password(signup_form.cleaned_data['password'])
             new_user.save()
-            return render(request, 'register_done.html',{"new_user":new_user})
+            return render(request, 'signup.html',{"new_user":new_user})
     else: #POST 방식 외로 접근했을 때
-        register_form=UserRegisterForm() 
-    return render(request, 'register.html',{"register_form":register_form})
+        signup_form=UserRegisterForm()
+    return render(request, 'signup.html',{"signup_form":signup_form})

@@ -12,7 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="https://kit.fontawesome.com/f0e73cfa04.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css">
     <title>In site Art Gallery</title>
 </head>
 
@@ -60,11 +63,6 @@
         </nav>
 
         {% block content %}
-            <section>
-                <div class="section_wrap">
-
-                </div>
-            </section>
         {% endblock %}
 
         <footer>
@@ -88,6 +86,7 @@
         </footer>
 
     </div>
-</body>
 
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
 </html>

@@ -98,10 +98,28 @@ h2 a {
     color: black;
 }
 
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 
-/* nav 영역!!!!!!!!!================================================================================ */
+}
 
-.hastag {}
+.account .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu ul li {
+    border-bottom: 1px solid black;
+}
+
+.dropdown-menu ul li a {
+    /* display: block; */
+    font-size: 10px;
+}
+
+/* nav 영역!!!!! */
 
 .hastag ul {
     text-align: center;
@@ -123,15 +141,91 @@ h2 a {
     margin-bottom: 30px;
 }
 
-/* section 영역!!!!!!!!!================================================================================ */
+/* section 영역!!!! */
 
+section {
+    width: 100%;
+    height: 100%;
+}
 
 .section_wrap {
-    height: 500px;
+    background-color: #00000020;
+}
+
+.slick_container {
+    width: 900px;
+    height: 550px;
+    background-color: #ff000020;
+    margin: auto;
+}
+
+.slick_container div { /* 이미지 사이즈 테스트 여부 css */
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.slick_container img {
+    width: 100%;
+    height: 100%;
+    /* object-fit: contain; /* 이미지의 원본 비율을 유지함 (사진마다 부모요소의 크기 안으로만 맞춰서 공백이 생겨보일 수 있음) */
+    object-fit: cover; /* 이미지의 비율을 유지하되 부모 박스 크기를 꽉 채워줌 (사진이 잘려서 보일 수 있음) */
+}
+
+.content_wrap {
+    background-color: #ff000020;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.content_wrap div {
+    margin: auto;
+
+}
+
+.item1 {
+    width: 70px;
+    height: 100px;
+    background-color: #00000020;
+
+}
+
+.item2 {
+    width: 200px;
+    height: 100px;
+    background-color: #ff00ff20;
+}
+
+.item3 {
+    width: 150px;
+    height: 80px;
     background-color: #ffff0020;
 }
 
-/* footer 영역!!!!!!!!!================================================================================ */
+.item4 {
+    width: 230px;
+    height: 90px;
+    background-color: #ff002220;
+}
+
+.item5 {
+    width: 700px;
+    height: 100px;
+    background-color: #ff000020;
+}
+
+.item6 {
+    width: 300px;
+    height: 450px;
+    background-color: #ff000020;
+}
+
+
+/* footer 영역!!!!!! */
 
 .footer_wrap {
     border-top: 3px solid #cccccc;
@@ -171,7 +265,7 @@ h2 a {
 }
 
 
-/* signup 페이지 (로그인 폼) */
+/* signup 페이지 (로그인 페이지) ===============================================*/
 
 .login_container {
     width: 100%;
@@ -214,7 +308,7 @@ h2 a {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    
+
 }
 
 .login_form {
@@ -252,5 +346,157 @@ h2 a {
 }
 
 .login_btn:hover {
-    color: gold;
+    color: #358ce9;
+}
+
+/* signup.html (회원가입 페이지!!!!)================================================ */
+
+#signup_section{
+    width: 100%;
+    /* background-color: #00000020; */
+}
+
+.signup_container {
+    /* background-color: #00000020; */
+    width: 700px;
+    height: 700px;
+    margin: auto;
+    padding: 30px 40px;
+    box-sizing: border-box;
+}
+
+.signup_wrap {
+    width: 100%;
+    /* background-color: #00000020; */
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 45px;
+    padding: 20px 0;
+}
+
+.signup_wrap h2 a {
+    float: none;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.signup_wrap form input {
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.signup_id_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+}
+
+.signup_id_box button {
+    width: 70px;
+    height: 20px;
+    border: 1px solid black;
+    flex: 0 0 auto;
+    margin: 10px;
+}
+
+.signup_password_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+}
+
+.password_check_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+}
+
+.signup_email_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.signup_email_box select {
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.signup_email:first-of-type {
+    width: 90px;
+}
+
+.signup_phone_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.signup_phone {
+    width: 60px;
+}
+
+.signup_address_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.signup_address_box button {
+    width: 80px;
+    height: 20px;
+    border: 1px solid black;
+    flex: 0 0 auto;
+    margin: 10px;
+
+}
+
+
+.signup_address_detail_box {
+    width: 200px;
+    margin: auto;
+    text-align: left;
+}
+
+.signup_btn_box {
+    width: 200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.signup_btn_box button {
+    width: 80px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.signup_btn_box button:first-child {
+    background-color: #2FB20F;
+}
+
+.signup_btn_box button:first-child:hover {
+    color: white;
+    background-color: #358ce9;
 }

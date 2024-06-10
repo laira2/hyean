@@ -3,8 +3,6 @@ import requests
 import time
 from django.shortcuts import render
 from urllib.parse import urlencode
-#import sys
-#sys.setrecursionlimit(10000)
 
 # OpenAPIView 클래스 정의
 class OpenAPIView:
@@ -79,4 +77,5 @@ def openapi_view(request):
 
     image_info_list = list(image_info_dict.values())
     return render(request, 'openapi.html', {'image_info_list': image_info_list})
+
 

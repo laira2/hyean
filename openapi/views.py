@@ -1,45 +1,47 @@
 import random #난수 생성 함수 모듈
 import asyncio #비동기 작업을 위한 asyncio 모듈
 import aiohttp #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 가져오며, 비동기적으로 HTTP 요청 및 응답을 받아올 수 있다.
+import requests #동기적인 HTTP 요청을 보내는데 사용되는 requests 모듈을 가져온다. HTTP 요청/응답을 받아옴
+import time #시간 관련 함수 제공
 from django.shortcuts import render #장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
 from urllib.parse import urlencode #딕셔너리를 쿼리 문자열로 변환하는데 사용
 
-class OpenAPIView: #templates의 openapi.html만 바라보게 하기 위해 사용
-    pass
 
 # 이미지 및 작품 데이터 캐싱을 위한 딕셔너리
 cached_data = { #이미지와 작품 데이터를 캐싱하기 위해 딕셔너리 초기화
     'images': {}, #이미지 데이터 저장을 위해 사용되는 빈 딕셔너리
-    'art_names': set(), #작품명을 저장하는데 사용되는 빈 집합(set)
-    'art_dimensions': {}  # 작품의 가로 세로 정보를 저장할 딕셔너리 추가
+    'art_names': set() #작품명을 저장하는데 사용되는 빈 집합(set)
 }
 
-async def fetch(session, url, cache_key=None):
-#비동기적으로 데이터를 가져오고 캐싱처리 진행
-#cache_key=None는 캐시 키로, 기본값이 None이며, 해당 키를 사용하여 데이터 캐시 진행
-    global cached_data # 함수 내에서 cached_data를 수정하기 위해 전역변수 선언
+async def fetch(session, url): #비동기적으로 URL에서 데이터를 가져오는 함수로 'aiohttp'모듈 사용하여 비동기적으로 HTTP 요청
+    async with session.get(url) as response:
+        #async with는 비동기적으로 with문을 사용하기 위한 구문으로 자원관리를 위해 사용
+        return await response.json()
 
-    if cache_key and cache_key in cached_data['images']: #cache_key가 주어졌고, 딕셔너리에 있다면
-        return cached_data['images'][cache_key] #캐시된 데이터 반환
+async def get_image(session, url): #이미지 데이터를 가져오는데 사용되는 함수
+    global cached_data #전역변수 선언, 해당 변수는 작품 데이터를 캐싱하기 위해 사용
 
-    async with session.get(url) as response: #비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
-        data = await response.json() #응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
+    if url in cached_data['images']:
+        return cached_data['images'][url]
+    #이미지 데이터가 이미 캐싱되어있는지 확인, 캐싱되어있다면 캐싱된 데이터 반환
 
-        if cache_key: #cache_key가 있는 경우 이미지값을 딕셔너리에 저장
-            cached_data['images'][cache_key] = data
+    async with session.get(url) as response:
 
-        return data #캐시키와 이미지값을 호출 시 반환
+        image_data = await response.json()
+        cached_data['images'][url] = image_data
+        #새로 가져온 이미지 데이터 저장
+        return image_data
 
 async def get_data(base_url):
     async with aiohttp.ClientSession() as session:
     #aiohttp의 Clientsession 객체를 사용, 비동기적으로 해당 URL에 GET요청
     #session은 HTTP 요청을 보내는데 사용
         tasks = [] #비동기 작업들을 저장할 빈 리스트 생성
-        for page_number in range(0,3):
+        for page_number in range(0, 5):
             params = {
                 "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
                 "pageNo": str(page_number),
-                "numOfRows": "5",
+                "numOfRows": "100",
                 "returnType": "json",
                 "engNlty": "Republic of Korea"
             }
@@ -51,7 +53,7 @@ async def get_data(base_url):
         responses = await asyncio.gather(*tasks)
         #tasks리스트에 있는 모든 비동기 작업을 동시에 실행
 
-    # 작품명 및 이미지 데이터 캐싱
+        # 작품명 및 이미지 데이터 캐싱
         for response in responses: #비동기적으로 실행한 HTTP 요청 결과를 담고 있는 리스트로, 반복문 사용
             items = response.get('response', {}).get('body', {}).get('items', [])
             #각 응답에서 작품 정보를 추출하며, 위 내용중 하나라도 존재하지 않으면 빈 리스트 반환
@@ -63,28 +65,21 @@ async def get_data(base_url):
                         if art_name_stripped:
                             cached_data['art_names'].add(art_name_stripped)
                             #캐싱된 데이터에 작품명 추가. 중복된 작품명은 자동 제거
-                            art_width = item.get('artWidth') #작품 가로
-                            art_vrticl = item.get('artVrticl') #작품 세로
-                            cached_data['art_dimensions'][art_name_stripped] = {#가로, 세로 값 딕셔너리 저장
-                                'art_width': art_width,
-                                'art_vrticl': art_vrticl
-                            }
 
-        return responses #작품명, 가로, 세로 값 추출 후 캐시
+        return responses
 
 async def openapi_view(request):
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
 
-    await get_data(base_url)
+    data_responses = await get_data(base_url)
     #get_data 함수를 사용하여 작품 정보를 가져오며, 비동기적으로 실행된다.
     #await 키워드를 사용하여 결과를 기다림
 
     info_list = list(cached_data['art_names'])
-    #앞서 캐시된 작품명을 담고 있는 세트를 리스트로 변환하여 info_list 변수에 저장
+    # 앞서 캐시된 작품명을 담고 있는 세트를 리스트로 변환하여 info_list 변수에 저장
 
-    image_info_dict = {}
-    #이미지 정보를 저장할 빈 딕셔너리 생성
+    image_info_dict = {} #이미지 정보를 저장할 빈 딕셔너리 생성
 
     async with aiohttp.ClientSession() as session:
     #비동기 HTTP 요청을 수행하기 위해 aiohttp 모듈 사용하여 클라이언트 세션 생성
@@ -93,39 +88,33 @@ async def openapi_view(request):
             image_params = { #이미지를 가져오기 위해 파라미터 설정
                 "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
                 "pageNo": "1",
-                "numOfRows": "5",
+                "numOfRows": "10",
                 "returnType": "json",
                 "artNm": art_name
             }
             try: #비동기적으로 이미지를 가져오는 작업 수행
-                full_url = image_api_url + '?' + urlencode(image_params)
-                #이미지 API의 전체 URL 생성
-                image_response = await fetch(session, full_url, cache_key=full_url)
-                #이미지 데이터를 가져오는 비동기 함수 fetch 호출
-                #전체 URL로 HTTP GET요청 후 이미지 데이터 반환
-                #캐시되어 이전에 가져온 데이터가 있는 경우 캐시된 데이터 반환
+                image_response = await get_image(session, image_api_url + '?' + urlencode(image_params))
+                #get_image함수를 호출하여 이미지를 가져오며, await는 비동기 함수 결과를 기다리는데 사용, API URL, 매겨변수 포함 딕셔너리
                 if image_response:
                     image_data = image_response.get('response', {}).get('body', {}).get('items', [])
-                    #이미지 데이터가 있는 경우 이미지 항목 추출 후 리스트 반환
-                    if image_data:
+                    #이미지가 있을 시 JSON 형식으로 데이터 추출
+                    if image_data: #데이터 존재여부 확인
                         for image_item in image_data:
                             file_name = image_item.get('fileNm', '')
                             file_url = image_item.get('fileUrl', '')
-                            if file_name and file_url:
-                                file_name_prefix = file_name[:4] #파일 이름 4글자 추출
-                                image_info_dict[file_name_prefix] = { #이미지 정보 딕셔너리에 저장
+                            if file_name and file_url: #파일이름과 URL이 빈값인지 확인, 값이 있다면 저장
+                                file_name_prefix = file_name[:4] #파일명 접두사 4글자 추출
+                                image_info_dict[file_name_prefix] = { #딕셔너리에 저장
                                     'art_name': art_name,
                                     'file_name': file_name,
-                                    'file_url': file_url,
-                                    'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
-                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', '')
+                                    'file_url': file_url
                                 }
                 else:
-                    print(f"이미지를 가져오지 못했습니다. {art_name}.") #이미지 데이터가 없는경우 작품명 출력
+                    print(f"이미지를 가져오지 못했습니다. {art_name}.")
             except aiohttp.ClientError as e:
-                print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}") #오류발생 시 세부정보와 작품명 출력
-                print("3초 후 다시 시도합니다.") #네트워크 등의 오류 발생 시 3초 대기 문구 출력
-                await asyncio.sleep(3) #3초 대기, 비동기적으로 일시 중단 후 지정 시간 후 코드 실행
+                print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}") #작품명과 예외 객체 출력
+                print("3초 후 다시 시도합니다.")
+                await asyncio.sleep(3) #비동기 작업 일시 중단 후 3초 대기, 서버 부하 줄이기 위해 사용
 
     for image_info in image_info_dict.values(): #작품가격을 위한 랜덤함수 사용
         price = random.randint(1000, 10000) * 10000 #천에서 만사이의 랜덤 정수 선택 후 만 곱하기

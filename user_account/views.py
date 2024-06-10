@@ -36,7 +36,7 @@ def signup(request): #회원가입
             new_user = signup_form.save(commit=False)
             new_user.set_password(signup_form.cleaned_data['password']) #set_password로 저장 전 해시 처리
             new_user.save()
-            phone_number = signup_form.cleaned_data['phone1'] + signup_form.cleaned_data['phone2'] + signup_form.cleaned_data['phone3']
+            phone_number = signup_form.clean_phone()
             address = signup_form.cleaned_data['address']
             detail_address = signup_form.cleaned_data['detail_address']
             profile = Profile.objects.create(user=new_user, phone_number=phone_number, address=address,

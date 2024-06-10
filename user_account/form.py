@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import Profile
+
+
 class LoginForm(forms.Form):
     username= forms.CharField(label="ID", widget=forms.TextInput(attrs={'class': 'id_input'}))
     password = forms.CharField(label="PW", widget=forms.PasswordInput(attrs={'class': 'id_input'}))
@@ -42,12 +45,21 @@ class UserRegisterForm(forms.ModelForm): #회원 가입 form
             raise forms.ValidationError("이미 존재하는 이메일 입니다.")
         return email
 
-    def save(self, commit=True):  # save 메서드 오버라이드
+    def clean_phone(self):
+        cd=self.cleaned_data
+        phoneNum = f"{cd['phone1']}{cd['phone2']}{cd['phone3']}"
+        if not phoneNum: # 비어있지 않을 때
+            raise forms.ValidationError("정확히 입력해주세요.")
+        return phoneNum
+
+    def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
         user.email = self.clean_emailname()
         if commit:
             user.save()
+
         return user
+
 
 

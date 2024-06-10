@@ -1,8 +1,6 @@
-from django.urls import path, include
-from django.contrib import admin
+from django.urls import path
+from . import views  # artWork의 views를 import
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('artWork/', include('artWork.urls')),  # artWork 앱의 URL 추가
-    # 다른 URL 패턴 추가
+    path('', views.index, name='index'),  # 예를 들어, index view로 연결
 ]

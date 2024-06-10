@@ -1,4 +1,5 @@
-import os.path
+# import os.path
+import os
 import logging
 from pathlib import Path
 
@@ -126,7 +127,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = ( # static 폴더를 찾기 위한 코드를 추가함 - 이영균
-    os.path.join('static/'),
+    #os.path.join('static/'), #상대경로 - aiden
+    #os.path.join('static/')사용하려면 위에 import os.path도 사용해야함 둘이 세트임 -aiden
+    BASE_DIR / 'static', #절대경로 - aiden
 )
 
 

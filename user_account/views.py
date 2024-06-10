@@ -30,7 +30,7 @@ def signup(request): #회원가입
             new_user = signup_form.save(commit=False)
             new_user.set_password(signup_form.cleaned_data['password'])
             new_user.save()
-            return render(request, 'signup.html',{"new_user":new_user})
+            return render(request, 'index.html',{"new_user":new_user})
     else: #POST 방식 외로 접근했을 때
         signup_form=UserRegisterForm()
     return render(request, 'signup.html',{"signup_form":signup_form})

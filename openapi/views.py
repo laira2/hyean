@@ -11,7 +11,8 @@ class OpenAPIView: #templates의 openapi.html만 바라보게 하기 위해 사�
 cached_data = { #이미지와 작품 데이터를 캐싱하기 위해 딕셔너리 초기화
     'images': {}, #이미지 데이터 저장을 위해 사용되는 빈 딕셔너리
     'art_names': set(), #작품명을 저장하는데 사용되는 빈 집합(set)
-    'art_dimensions': {}  # 작품의 가로 세로 정보를 저장할 딕셔너리 추가
+    'art_dimensions': {}, #작품의 가로 세로 정보를 저장할 딕셔너리 추가
+    'art_info': {} #작품 id, 카테고리 정보를 저장할 딕셔너리 추가
 }
 
 async def fetch(session, url, cache_key=None):
@@ -35,11 +36,11 @@ async def get_data(base_url):
     #aiohttp의 Clientsession 객체를 사용, 비동기적으로 해당 URL에 GET요청
     #session은 HTTP 요청을 보내는데 사용
         tasks = [] #비동기 작업들을 저장할 빈 리스트 생성
-        for page_number in range(0,3):
+        for page_number in range(0, 3):
             params = {
                 "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
                 "pageNo": str(page_number),
-                "numOfRows": "5",
+                "numOfRows": "10",
                 "returnType": "json",
                 "engNlty": "Republic of Korea"
             }
@@ -65,12 +66,16 @@ async def get_data(base_url):
                             #캐싱된 데이터에 작품명 추가. 중복된 작품명은 자동 제거
                             art_width = item.get('artWidth') #작품 가로
                             art_vrticl = item.get('artVrticl') #작품 세로
-                            cached_data['art_dimensions'][art_name_stripped] = {#가로, 세로 값 딕셔너리 저장
+                            artCd = item.get('artCd') #작품 id
+                            categry = item.get('categry') if item.get('categry') else '기타 '#작품 카테고리, 없는 경우 기타 입력
+                            cached_data['art_dimensions'][art_name_stripped] = { #가로, 세로 값 딕셔너리 저장
                                 'art_width': art_width,
                                 'art_vrticl': art_vrticl
                             }
-
-        return responses #작품명, 가로, 세로 값 추출 후 캐시
+                            cached_data['art_info'][art_name_stripped] = { #작품 일련번호, 카테고리 값 딕셔너리 저장
+                                'artCd': artCd,
+                                'categry': categry
+                            }
 
 async def openapi_view(request):
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
@@ -118,7 +123,9 @@ async def openapi_view(request):
                                     'file_name': file_name,
                                     'file_url': file_url,
                                     'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
-                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', '')
+                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
+                                    'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
+                                    'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
                                 }
                 else:
                     print(f"이미지를 가져오지 못했습니다. {art_name}.") #이미지 데이터가 없는경우 작품명 출력

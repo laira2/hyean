@@ -1,4 +1,5 @@
-import os.path
+# import os.path
+import os
 import logging
 from pathlib import Path
 
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'openapi',
     'rest_framework',
     'drf_yasg',
+    'artWork',
     # allauth를 사용한 구글 , 네이버 로그인 구현
     # 카카오는 오류로 구현 안됨. 추후 확인 필요
     'allauth',
@@ -52,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -123,7 +127,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = ( # static 폴더를 찾기 위한 코드를 추가함 - 이영균
-    os.path.join('static/'),
+    #os.path.join('static/'), #상대경로 - aiden
+    #os.path.join('static/')사용하려면 위에 import os.path도 사용해야함 둘이 세트임 -aiden
+    BASE_DIR / 'static', #절대경로 - aiden
 )
 
 

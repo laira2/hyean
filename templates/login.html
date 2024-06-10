@@ -7,11 +7,7 @@
                     <a href="#">In site Art Gallery</a>
             </h2>
             <form method="post">
-
                 <div class="login_form">
-                    {% if request.message %}
-                       <p>{{ request.message }}</p>
-                    {% endif %}
                     {{ login_form.as_p }}
                     {% csrf_token %}
                     <div class="login_btn_box">

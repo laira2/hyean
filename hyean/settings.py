@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'openapi',
     'rest_framework',
     'drf_yasg',
+    'artWork',
     # allauth를 사용한 구글 , 네이버 로그인 구현
     # 카카오는 오류로 구현 안됨. 추후 확인 필요
     'allauth',
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hyean.urls'

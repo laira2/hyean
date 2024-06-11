@@ -196,4 +196,4 @@ def search(request):
         print("API 요청 실패:", response.status_code)
         art_list = []
 
-    return render(request, 'your_template.html', {'art_list': art_list, 'search_query': search_query})
+    return render(request, 'index.html', {'art_list': art_list, 'search_query': search_query})

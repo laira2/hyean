@@ -71,7 +71,7 @@ $(function(){
 function searchInput() {
     let searchValue = $('#searchInput').val().trim()
     if (searchValue.length > 2) {
-        location.href="search/" + searchValue + "/";
+        location.href="search/";
         console.log(searchValue);
     } else {
         alert('검색어가 너무 짧습니다.')

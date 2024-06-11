@@ -19,7 +19,7 @@
                     {% for image_info in image_info_list %}
                     <li>
                         <div class="img_wrap">
-                            <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px">
+                            <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px; min-height: 350px">
                             <div class="img_info">
                                 <p><strong>작품명 :</strong>{{ image_info.art_name }}</p>
                                 <p><strong>일련번호 :</strong>{{ image_info.artCd }}</p>

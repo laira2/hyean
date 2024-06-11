@@ -68,7 +68,7 @@
             <ul>
               {% if request.user.is_authenticated %}
               <li>
-                  <a href="{% url 'logout' %}">로그 아웃</a>
+                  <a href="{% url 'account_logout' %}">로그 아웃</a>
               </li>
               <li>
                 <a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>

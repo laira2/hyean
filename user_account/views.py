@@ -5,11 +5,6 @@ from django.http import HttpResponse
 
 from .models import Profile
 
-def user_logout(request):
-    if not request.user.is_authenticated:
-        return redirect('login',)
-    logout(request)
-    return redirect("index")
 def user_login(request):
     if request.method =='POST':
         login_form= LoginForm(request.POST)

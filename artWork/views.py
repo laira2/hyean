@@ -1,10 +1,12 @@
 # artWork/views.py
+import requests.exceptions
 from django.shortcuts import render
 import random #난수 생성 함수 모듈
 import asyncio #비동기 작업을 위한 asyncio 모듈
 import aiohttp #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 가져오며, 비동기적으로 HTTP 요청 및 응답을 받아올 수 있다.
 from django.shortcuts import render #장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
 from urllib.parse import urlencode #딕셔너리를 쿼리 문자열로 변환하는데 사용
+from haystack.query import SearchQuerySet
 
 # def index(request):
 #     return render(request, 'index.html')
@@ -143,14 +145,56 @@ async def openapi_view(request):
     image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
     return render(request, 'index.html', {'image_info_list': image_info_list})
 
-# async def search_view(request): # 작품명으로 검색 기능 메서드
-#     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
-#     await get_data(base_url)
-#
-#     if request.method == 'GET':
-#         # search_form =
-#
-#     search_query = request.GET.get('search_query', '').strip()
-#     filtered_art_names = [art_name for art_name in cached_data['art_names'] if search_query in art_name]
-#
-#     return render(request, 'index.html', {'filtered_art_names': filtered_art_names})
+def search(request):
+    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
+    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+
+    image_params = {  # 이미지를 가져오기 위해 파라미터 설정
+        "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+        "pageNo": "1",
+        "numOfRows": "5",
+        "returnType": "json",
+        "artNm": art_name
+    }
+
+    try:
+        # 작품 목록 API 요청
+        response = client.search(
+            index="{index}",
+            doc_type="{type}",
+            body={
+                "query": {
+                    "match_all": {}
+                }
+            }
+        )
+
+        response.raise_for_status()
+
+        # 응답 데이터 처리
+        data = response.jsoni()
+
+        # 검색결과 출력먼저
+        if data['response']['body']['items']:
+            print(f"'{keyword}'에 해당하는 작품목록:")
+            for item in data['response']['body']['items']['item']:
+                print(f"-{item['cllctNum']}")
+
+                # 이미지 api
+                image_params = {
+                    "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+                    "cllctnId": item["cllctnId"],
+                    "_type": "json"
+                }
+                image_reponse = requests.get(image_api_url, params=image_params)
+                image_data = image_reponse.json()
+
+                # 작품 이미지 url 출력
+                if image_data['response']['body']['items']:
+                    print(f" 이미지 URL: {image_data['response']['body']['items']['item']['imgUrl']}")
+                else:
+                    print("이미지 정보없음")
+        else:
+            print(f"'{keyword}'에 해당하는 작품이 없습니다.")
+    except requests.exceptions.RequestException as e:
+        print(f"API 요청 중 오류 발생: {e}")

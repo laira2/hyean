@@ -23,3 +23,4 @@ def artwork_api(request):
     elif request.method == 'DELETE':
         # 데이터 삭제
         return Response({"message": "This is a DELETE request"}, status=status.HTTP_204_NO_CONTENT)
+      

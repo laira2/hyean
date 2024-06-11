@@ -72,11 +72,11 @@ function searchInput() {
     let searchValue = $('#searchInput').val().trim()
     if (searchValue.length > 2) {
         location.href="search/" + searchValue + "/";
+        console.log(searchValue);
     } else {
         alert('검색어가 너무 짧습니다.')
     }
 }
-
 $(document).ready(function(){
     $('#searchInput').on('keyup', function(event){
         if(event.key == 'Enter'){

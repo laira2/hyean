@@ -182,7 +182,6 @@ section {
     border-top: 3px solid black;
     padding-top: 20px;
     height: 100%;
-    overflow: auto;
 }
 
 .content_wrap {
@@ -195,7 +194,6 @@ section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    height: 100vh;
 }
 
 .content_wrap div {

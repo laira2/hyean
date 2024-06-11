@@ -9,9 +9,6 @@ from urllib.parse import urlencode #딕셔너리를 쿼리 문자열로 변환�
 # def index(request):
 #     return render(request, 'index.html')
 
-class OpenAPIView: #templates의 openapi.html만 바라보게 하기 위해 사용
-    pass
-
 # 이미지 및 작품 데이터 캐싱을 위한 딕셔너리
 cached_data = { #이미지와 작품 데이터를 캐싱하기 위해 딕셔너리 초기화
     'images': {}, #이미지 데이터 저장을 위해 사용되는 빈 딕셔너리
@@ -146,3 +143,14 @@ async def openapi_view(request):
     image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
     return render(request, 'index.html', {'image_info_list': image_info_list})
 
+# async def search_view(request): # 작품명으로 검색 기능 메서드
+#     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
+#     await get_data(base_url)
+#
+#     if request.method == 'GET':
+#         # search_form =
+#
+#     search_query = request.GET.get('search_query', '').strip()
+#     filtered_art_names = [art_name for art_name in cached_data['art_names'] if search_query in art_name]
+#
+#     return render(request, 'index.html', {'filtered_art_names': filtered_art_names})

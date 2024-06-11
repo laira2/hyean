@@ -2,30 +2,34 @@
 {% load static %}
 {% block content %}
 <section>
-    <div class="section_wrap">
-        <div class="slick_container">
-            <div><img src="{% static 'img/gucciSeoul.jpeg' %}" alt=""></div>
-            <div><img src="{% static 'img/korean_mood1.jpeg' %}" alt=""></div>
-            <div><img src="{% static 'img/white_cow.jpeg' %}" alt=""></div>
-            <div><img src="{% static 'img/colorful.jpeg' %}" alt=""></div>
-            <div><img src="{% static 'img/6.25.jpeg' %}" alt=""></div>
-            <div><img src="{% static 'img/seoulcity.jpeg' %}" alt=""></div>
+    <div class="mainpage_content_container">
+        <div class="section_wrap">
+            <div class="slick_container">
+                <div><img src="{% static 'img/gucciSeoul.jpeg' %}" alt=""></div>
+                <div><img src="{% static 'img/korean_mood1.jpeg' %}" alt=""></div>
+                <div><img src="{% static 'img/white_cow.jpeg' %}" alt=""></div>
+                <div><img src="{% static 'img/colorful.jpeg' %}" alt=""></div>
+                <div><img src="{% static 'img/6.25.jpeg' %}" alt=""></div>
+                <div><img src="{% static 'img/seoulcity.jpeg' %}" alt=""></div>
+            </div>
         </div>
-        <div class="content_wrap">
-            <ul>
-                {% for image_info in image_info_list %}
-                <li>
-                    <div class="img_wrap">
-                        <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px">
-                        <div class="img_info">
-                            <p><strong>작품명 :</strong>{{ image_info.art_name }}</p>
-                            <p><strong>일련번호 :</strong>{{ image_info.artCd }}</p>
-                            <p><strong>작품가격 :</strong>{{ image_info.price }}</p>
+        <div class="content_container">
+            <div class="content_wrap">
+                <ul>
+                    {% for image_info in image_info_list %}
+                    <li>
+                        <div class="img_wrap">
+                            <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px">
+                            <div class="img_info">
+                                <p><strong>작품명 :</strong>{{ image_info.art_name }}</p>
+                                <p><strong>일련번호 :</strong>{{ image_info.artCd }}</p>
+                                <p><strong>작품가격 :</strong>{{ image_info.price }}</p>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 </section>

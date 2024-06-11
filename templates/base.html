@@ -33,6 +33,10 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"
     />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
     <title>In site Art Gallery</title>
     {% load static %}
     <link
@@ -47,7 +51,7 @@
       <header id="header">
         <div class="header_wrap">
           <h2 id="logo">
-            <a href="#">In site Art Gallery</a>
+            <a href="{% url 'index' %}">In site Art Gallery</a>
           </h2>
 
           <div class="search_wrap">
@@ -62,12 +66,21 @@
 
           <div class="account">
             <ul>
+              {% if request.user.is_authenticated %}
               <li>
-                <a href="#"><i class="fa-solid fa-user"></i></a>
+                  <a href="{% url 'logout' %}">로그 아웃</a>
+              </li>
+              <li>
+                <a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>
               </li>
               <li>
                 <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
               </li>
+              {% else %}
+                <li>
+                  <a href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>
+                </li>
+              {% endif %}
               <li>
                 <a href="#"><i class="fa-solid fa-bars"></i></a>
               </li>

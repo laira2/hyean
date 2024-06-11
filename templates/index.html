@@ -29,6 +29,26 @@
                     </li>
                     {% endfor %}
                 </ul>
+                {% if art_list %}
+                    <h2>검색 결과</h2>
+                        <ul>
+                            {% for art in art_list %}
+                                <li>
+                                    <p>작품 번호: {{ art.cllctNum }}</p>
+                                    <p>작품명: {{ art.artNm }}</p>
+                                    <p>이미지:
+                                        {% if art.image_url %}
+                                            <img src="{{ art.image_url }}" alt="작품 이미지">
+                                        {% else %}
+                                            이미지 없음
+                                        {% endif %}
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                {% else %}
+                    <p>검색된 작품이 없습니다.</p>
+                {% endif %}
             </div>
         </div>
     </div>

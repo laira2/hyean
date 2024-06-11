@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
 <section id="signup_section">
@@ -7,19 +7,8 @@
                     <h2 class="logo">
                         <a href="#">In site Art Gallery</a>
                     </h2>
-                    <form action="{% url 'signup' %}" method="post" id="signup_form">
+                    <form action="#" method="post" id="signup_form">
                         {% csrf_token %}
-                        {% if signup_form.errors %}
-                            <div class="error">
-                                <ul>
-                                    {% for field in signup_form %}
-                                        {% for error in field.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
 
                         <div class="signup_id_box">
                             {{ signup_form.username }}
@@ -35,7 +24,7 @@
                         </div>
 
                         <div class="signup_email_box">
-                            {{ signup_form.email_name }}@
+                            {{ signup_form.email }}@
                             {{ signup_form.domain }}
                         </div>
 
@@ -98,8 +87,8 @@
 <!--                        </div>-->
 
                         <div class="signup_btn_box">
-                            <button type="submit">회원가입</button>
-                            <button type="button" onclick="window.history.back();">돌아가기</button>
+                            <button>회원가입</button>
+                            <button>돌아가기</button>
                         </div>
 
                     </form>

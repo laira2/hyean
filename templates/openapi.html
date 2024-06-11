@@ -16,6 +16,7 @@
         <strong>작품가격:</strong> {{ image_info.price }}<br />
         <strong>파일명:</strong> {{ image_info.file_name|slice:":4" }}<br />
         <!-- 파일명에서 앞 4글자만 출력 -->
+        <strong>작품크기:</strong> {{ image_info.art_width }} x {{ image_info.art_vrticl}}<br />
         <strong>이미지:</strong><br />
         <img
           src="{{ image_info.file_url }}"

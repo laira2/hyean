@@ -197,7 +197,7 @@ def search(request, search_query):
         art_list = []
 
     return render(request, 'index.html', {'art_list': art_list, 'search_query': search_query})
-=======
+
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

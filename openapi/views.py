@@ -132,70 +132,6 @@ def generate_dimension():
     return random.randint(100, 300)  # 100에서 300 사이의 랜덤한 값 반환
 
 async def openapi_view(request):
-
-    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
-    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
-
-    await get_data(base_url)
-    #get_data 함수를 사용하여 작품 정보를 가져오며, 비동기적으로 실행된다.
-    #await 키워드를 사용하여 결과를 기다림
-
-    info_list = list(cached_data['art_names'])
-    #앞서 캐시된 작품명을 담고 있는 세트를 리스트로 변환하여 info_list 변수에 저장
-
-    image_info_dict = {}
-    #이미지 정보를 저장할 빈 딕셔너리 생성
-
-    async with aiohttp.ClientSession() as session:
-    #비동기 HTTP 요청을 수행하기 위해 aiohttp 모듈 사용하여 클라이언트 세션 생성
-    #해당 세션은 HTTP 요청을 보내기 위한 컨텍스트 매니저로 사용
-        for art_name in info_list: #이미지를 가져올 작품명을 info_list에서 작품명을 반복하여 가져옴
-            image_params = { #이미지를 가져오기 위해 파라미터 설정
-                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-                "pageNo": "1",
-                "numOfRows": "5",
-                "returnType": "json",
-                "artNm": art_name
-            }
-            try: #비동기적으로 이미지를 가져오는 작업 수행
-                full_url = image_api_url + '?' + urlencode(image_params)
-                #이미지 API의 전체 URL 생성
-                image_response = await fetch(session, full_url, cache_key=full_url)
-                #이미지 데이터를 가져오는 비동기 함수 fetch 호출
-                #전체 URL로 HTTP GET요청 후 이미지 데이터 반환
-                #캐시되어 이전에 가져온 데이터가 있는 경우 캐시된 데이터 반환
-                if image_response:
-                    image_data = image_response.get('response', {}).get('body', {}).get('items', [])
-                    #이미지 데이터가 있는 경우 이미지 항목 추출 후 리스트 반환
-                    if image_data:
-                        for image_item in image_data:
-                            file_name = image_item.get('fileNm', '')
-                            file_url = image_item.get('fileUrl', '')
-                            if file_name and file_url:
-                                file_name_prefix = file_name[:4] #파일 이름 4글자 추출
-                                image_info_dict[file_name_prefix] = { #이미지 정보 딕셔너리에 저장
-                                    'art_name': art_name,
-                                    'file_name': file_name,
-                                    'file_url': file_url,
-                                    'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
-                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
-                                    'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
-                                    'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
-                                }
-                else:
-                    print(f"이미지를 가져오지 못했습니다. {art_name}.") #이미지 데이터가 없는경우 작품명 출력
-            except aiohttp.ClientError as e:
-                print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}") #오류발생 시 세부정보와 작품명 출력
-                print("3초 후 다시 시도합니다.") #네트워크 등의 오류 발생 시 3초 대기 문구 출력
-                await asyncio.sleep(3) #3초 대기, 비동기적으로 일시 중단 후 지정 시간 후 코드 실행
-
-    for image_info in image_info_dict.values(): #작품가격을 위한 랜덤함수 사용
-        price = random.randint(1000, 10000) * 10000 #천에서 만사이의 랜덤 정수 선택 후 만 곱하기
-        image_info['price'] = price
-
-    image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
-    return render(request, 'openapi.html', {'image_info_list': image_info_list})
-
     """View 함수로, 비동기적으로 데이터를 가져오고 렌더링"""
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"  # 기본 URL 설정
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"  # 이미지 API URL 설정
@@ -209,4 +145,3 @@ async def openapi_view(request):
         image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
 
     return render(request, 'openapi.html', {'image_info_list': image_info_list})  # 가져온 데이터
-

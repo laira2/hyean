@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -144,11 +145,11 @@ AUTHENTICATION_BACKENDS = [
 
 ]
 
-SITE_ID = 1
+SITE_ID = 3
 SOCIALACCOUNT_LOGIN_ON_GET = True
-#LOGIN_REDIRECT_URL = '/'
-# ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
-# ACCOUNT_LOGOUT_ON_GET = True
+LOGIN_REDIRECT_URL = '/artWork/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+ACCOUNT_LOGOUT_ON_GET = True
 
 HAYSTACK_CONNECTIONS = {
     'default': {

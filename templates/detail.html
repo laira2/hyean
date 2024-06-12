@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="detail_content_container">
+        <h1>{{ art_name }}</h1>
+        <div class="detail_image">
+            <img src="{{ image_url }}" alt="{{ art_name }}" style="max-width: 500px;">
+        </div>
+        <div class="detail_info">
+            <p><strong>일련번호 :</strong> {{ art_info.artCd }}</p>
+            <p><strong>카테고리 :</strong> {{ art_info.categry }}</p>
+            <p><strong>작품 가로 :</strong> {{ art_dimensions.art_width }}</p>
+            <p><strong>작품 세로 :</strong> {{ art_dimensions.art_vrticl }}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

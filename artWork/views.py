@@ -8,10 +8,13 @@ import aiohttp  #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 �
 from django.shortcuts import render  #장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
 from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환하는데 사용
 from haystack.query import SearchQuerySet
+import urllib.request
+import json
 
 # def index(request):
 #    return render(request, 'index.html')
 
+service_Key = "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg=="
 
 class OpenAPIView: #templates의 openapi.html만 바라보게 하기 위해 사용
     pass
@@ -150,6 +153,7 @@ async def openapi_view(request):
     image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
     return render(request, 'index.html', {'image_info_list': image_info_list})
 
+
 def search(request):
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
@@ -176,13 +180,8 @@ def search(request):
 
         for art in art_list:
             image_params = {
-                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-                "pageNo": "1",
-                "numOfRows": "5",
-                "returnType": "json",
-                "cllctnId": art["cllctnId"]
+                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8",
             }
-
             image_response = requests.get(image_api_url, params=image_params)
             if image_response.status_code == 200:
                 image_data = image_response.json()
@@ -190,9 +189,7 @@ def search(request):
                     art["image_url"] = image_data['response']['body']['items']['item']['imgUrl']
                 else:
                     art["image_url"] = None
-            else:
-                art["image_url"] = None
-    else:
+
         print("API 요청 실패:", response.status_code)
         art_list = []
 

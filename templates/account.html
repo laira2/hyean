@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<section id="account_container">
+            <div class="account_wrap">
+                <aside class="account_aside">
+                    <ul>
+                        <li>
+                            <strong><p>나의쇼핑</p></strong>
+                            <span><a href="#">주문내역</a></span><br>
+                            <span><a href="#">카트</a></span><br>
+                            <span><a href="#">선물함</a></span><br>
+                            <span><a href="#">위시 리스트</a></span>
+                        </li>
+                        <li>
+                            <strong><p>고객센터</p></strong>
+                            <span><a href="#">내 게시글</a></span><br>
+                            <span><a href="#">1:1 문의</a></span>
+
+                        </li>
+                        <li>
+                            <strong><p>회원정보</p></strong>
+                            <span><a href="#">수정</a></span>
+                            <span><a href="#">삭제</a></span>
+
+                        </li>
+                        <li>
+                            <strong><p>쿠폰</p></strong>
+                            <span><a href="#">발급</a></span>
+                            <span><a href="#">등록</a></span>
+                        </li>
+                    </ul>
+                </aside>
+
+                <div class="account_info">
+                    <div class="account_level">
+                        <span><i class="fa-solid fa-baby"></i></span>
+                        <p>나의 등급</p>
+                        <div class="account_level_data"><p>Lv. {{account}}</p></div>
+                    </div>
+
+                    <div class="account_coupon_info">
+                        <span><i class="fa-solid fa-coins"></i></span>
+                        <p>내 적립금</p>
+                        <div class="account_coupon_data"><p>{{0000}} 원</p></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+{% endblock %}

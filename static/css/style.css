@@ -505,3 +505,135 @@ section {
     color: white;
     background-color: #358ce9;
 }
+
+/* account.html에 관련한 css 스타일!=========================== */
+
+#account_container {
+    width: 100%;
+    height: 700px;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.account_wrap {
+    width: 800px;
+    height: 600px;
+    margin: auto;
+    border: 3px solid black;
+    border-radius: 40px;
+    padding: 30px 10px 0 10px;
+    box-sizing: border-box;
+}
+
+.account_aside {
+    width: 150px;
+    height: 500px;
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 35px;
+    float: left;
+    margin-right: 15px;
+}
+
+.account_aside ul li {
+    width: 100%;
+    text-align: left;
+    line-height: 30px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.account_aside ul li a:hover {
+    box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+
+.account_aside ul li a {
+    color : black;
+    font-size: 13px;
+}
+
+
+.account_aside ul li:last-of-type {
+    border: 0;
+}
+
+.account_info {
+    width: 600px;
+    height: 400px;
+    background-color: #fff;
+    float: left;
+    border: 1px solid black;
+    border-radius: 35px;
+}
+
+.account_level {
+    width: 300px;
+    height: 150px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 20px;
+    position: relative;
+    float: left;
+}
+
+.account_level:hover {
+    box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+.account_level>p {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 10px;
+}
+
+.account_level span i {
+    font-size: 50px;
+    margin-top: 10px;
+}
+
+.account_level_data {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.account_coupon_info {
+    width: 200px;
+    height: 150px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 20px;
+    position: relative;
+    float: left;
+}
+
+.account_coupon_info:hover {
+    box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+.account_coupon_info>p {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 10px;
+}
+
+.account_coupon_info span i {
+    font-size: 50px;
+    margin-top: 10px;
+}
+
+.account_coupon_data {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 700;
+}

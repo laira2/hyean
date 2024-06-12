@@ -6,6 +6,6 @@ urlpatterns = [
     path('', views.openapi_view, name='index'),
     # path('<str:artNm>/', views.search, name='search_query'),
     # path('search/', views.search, name='search_query'),
-    path('search/<str:artNm>/', views.search, name='search_query'),
+    path('search/', views.search, name='search_query'),
     # path('artwork-api/', views.artwork_api, name='artwork_api'),# 예를 들어, index view로 연결
 ]

@@ -150,7 +150,7 @@ async def openapi_view(request):
     image_info_list = list(image_info_dict.values()) #매개변수의 값을 리스트 형태로 반환하여 저장
     return render(request, 'index.html', {'image_info_list': image_info_list})
 
-def search(request):
+def search(request, search_query):
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
 

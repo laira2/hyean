@@ -70,7 +70,7 @@ $(function(){
 
 function searchInput() {
     let searchValue = $('#searchInput').val().trim()
-    if (searchValue.length > 2) {
+    if (searchValue.length > 1) {
         location.href="search/";
         console.log(searchValue);
     } else {

@@ -126,10 +126,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = ( # static 폴더를 찾기 위한 코드를 추가함 - 이영균
+STATICFILES_DIRS = ( # static 폴더를 찾기 위한 코드를 추가
     #os.path.join('static/'), #상대경로 - aiden
     #os.path.join('static/')사용하려면 위에 import os.path도 사용해야함 둘이 세트임 -aiden
-    BASE_DIR / 'static', #절대경로 - aiden
+    BASE_DIR / 'static/', #절대경로 - aiden
 )
 
 
@@ -150,3 +150,11 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/artWork/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
 ACCOUNT_LOGOUT_ON_GET = True
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}

@@ -145,11 +145,6 @@ h2 a {
 
 section {
     width: 100%;
-    height: 100%;
-}
-
-.section_wrap {
-    background-color: #00000020;
 }
 
 .slick_container {
@@ -173,57 +168,69 @@ section {
     object-fit: cover; /* 이미지의 비율을 유지하되 부모 박스 크기를 꽉 채워줌 (사진이 잘려서 보일 수 있음) */
 }
 
+.slick-dotted.slick-slider {
+    margin-bottom: 50px;
+}
+
+/* 메인페이지 콘텐츠들=================== */
+
+.content_container {
+    border-top: 3px solid black;
+    padding-top: 20px;
+    height: 100%;
+}
+
 .content_wrap {
-    background-color: #ff000020;
+    width: 1000px;
+    margin: auto;
+}
+
+.content_wrap ul {
     margin: auto;
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    align-items: center;
+    justify-content: space-between;
 }
 
 .content_wrap div {
     margin: auto;
-
 }
 
-.item1 {
-    width: 70px;
-    height: 100px;
-    background-color: #00000020;
-
-}
-
-.item2 {
-    width: 200px;
-    height: 100px;
-    background-color: #ff00ff20;
-}
-
-.item3 {
-    width: 150px;
-    height: 80px;
-    background-color: #ffff0020;
-}
-
-.item4 {
-    width: 230px;
-    height: 90px;
-    background-color: #ff002220;
-}
-
-.item5 {
-    width: 700px;
-    height: 100px;
-    background-color: #ff000020;
-}
-
-.item6 {
+.img_wrap {
     width: 300px;
-    height: 450px;
-    background-color: #ff000020;
+    position: relative;
+    overflow: hidden;
+    object-fil
 }
 
+.img_wrap img {
+    object-fit: fill;
+}
+
+.img_wrap:hover img {
+    filter: brightness(50%); /* 호버 시 이미지 밝기를 50%로 낮춤 */
+}
+
+
+
+.img_info {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+    /* padding: 10px; */
+    max-width: 300px;
+    box-sizing: border-box;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    /* height: 100%; */
+    text-align: center;
+}
+
+.img_wrap:hover .img_info {
+    display: block
+}
 
 /* footer 영역!!!!!! */
 
@@ -265,13 +272,12 @@ section {
 }
 
 
-/* signup 페이지 (로그인 페이지) ===============================================*/
+/* login 페이지 (로그인 페이지) ===============================================*/
 
 .login_container {
     width: 100%;
     height: 700px;
     background-color: #ffff0020;
-
     padding-top: 150px;
     box-sizing: border-box;
 }
@@ -308,7 +314,6 @@ section {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-
 }
 
 .login_form {

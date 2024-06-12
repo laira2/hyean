@@ -1,47 +1,47 @@
 
-
-document.addEventListener("DOMContentLoaded", function() {
-    // 폼 요소 선택
-    const form = document.querySelector('#signup_form');
-
-    // 이벤트 리스너 등록
-    form.addEventListener('submit', function(event) {
-        // 기본 이벤트 중단 (폼 제출 방지)
-        event.preventDefault();
-
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const password_check = document.getElementById('password_check');
-        const addressInput = document.getElementById('address');
-
-        // 아이디 유효성 검사 (최소 5글자 이상)
-        if (usernameInput.value.length < 5) {
-            alert("아이디는 최소 5글자 이상이어야 합니다.");
-            return;
-        }
-
-        // 비밀번호 유효성 검사 (예시: 최소 8글자 이상)
-        if (passwordInput.value.length < 8) {
-            alert("비밀번호는 최소 8글자 이상이어야 합니다.");
-            return;
-        }
-
-        // 비밀번호 확인
-        if (passwordInput.value !== password_check.value) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        // 주소 유효성 검사 (예시: 빈 값 체크)
-        if (addressInput.value.trim() === "") {
-            alert("주소를 입력하세요.");
-            return;
-        }
-
-        // 모든 조건이 충족되면 폼 제출
-        form.submit();
-    });
-});
+// 회원가입 유효성 검사 코드들이지만 장고에서 알아서 해주는 관계로 주석처리
+//document.addEventListener("DOMContentLoaded", function() {
+//    // 폼 요소 선택
+//    const form = document.querySelector('#signup_form');
+//
+//    // 이벤트 리스너 등록
+//    form.addEventListener('submit', function(event) {
+//        // 기본 이벤트 중단 (폼 제출 방지)
+//        event.preventDefault();
+//
+//        const usernameInput = document.getElementById('username');
+//        const passwordInput = document.getElementById('password');
+//        const password_check = document.getElementById('password_check');
+//        const addressInput = document.getElementById('address');
+//
+//        // 아이디 유효성 검사 (최소 5글자 이상)
+//        if (usernameInput.value.length < 5) {
+//            alert("아이디는 최소 5글자 이상이어야 합니다.");
+//            return;
+//        }
+//
+//        // 비밀번호 유효성 검사 (예시: 최소 8글자 이상)
+//        if (passwordInput.value.length < 8) {
+//            alert("비밀번호는 최소 8글자 이상이어야 합니다.");
+//            return;
+//        }
+//
+//        // 비밀번호 확인
+//        if (passwordInput.value !== password_check.value) {
+//            alert("비밀번호가 일치하지 않습니다.");
+//            return;
+//        }
+//
+//        // 주소 유효성 검사 (예시: 빈 값 체크)
+//        if (addressInput.value.trim() === "") {
+//            alert("주소를 입력하세요.");
+//            return;
+//        }
+//
+//        // 모든 조건이 충족되면 폼 제출
+//        form.submit();
+//    });
+//});
 
 // 슬릭 슬라이더
 $(function(){
@@ -67,3 +67,20 @@ $(function(){
 
     });
   })
+
+function searchInput() {
+    let searchValue = $('#searchInput').val().trim()
+    if (searchValue.length > 1) {
+        location.href="search/";
+        console.log(searchValue);
+    } else {
+        alert('검색어가 너무 짧습니다.')
+    }
+}
+$(document).ready(function(){
+    $('#searchInput').on('keyup', function(event){
+        if(event.key == 'Enter'){
+            searchInput();
+        }
+    })
+})

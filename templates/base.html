@@ -56,11 +56,11 @@
           </h2>
 
           <div class="search_wrap">
-            <form action="#" method="get">
+            <form action="{% url 'search' %}" method="get">
               <div class="search_icon">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </div>
-              <input type="text" placeholder="검색어를 입려해주세요" id="searchInput"/>
+              <input type="text" placeholder="검색어를 입려해주세요" name="q"/>
               <button type="submit"></button>
             </form>
           </div>

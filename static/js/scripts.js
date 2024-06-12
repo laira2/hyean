@@ -87,11 +87,10 @@ $(document).ready(function(){
 
 var count = 2;
 window.onscroll = function() {
-    if(window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         var toAdd = document.createElement("div");
         toAdd.classList.add("content_wrap")
         toAdd.textContent = '${++count}번째 블록'
         document.querySelector('.content_container').appendChild(toAdd)
     }
-
-});
+};

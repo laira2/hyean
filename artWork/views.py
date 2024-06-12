@@ -177,3 +177,4 @@ def artwork_api(request):
     return JsonResponse(data)
 
 
+

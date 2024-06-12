@@ -42,3 +42,6 @@ def signup(request): #회원가입
     else: #POST 방식 외로 접근했을 때
         signup_form=UserRegisterForm()
     return render(request, 'signup.html',{"signup_form":signup_form})
+
+def account(request):
+    return render(request, 'account.html')

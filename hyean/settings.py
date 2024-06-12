@@ -157,4 +157,5 @@ HAYSTACK_CONNECTIONS = {
         'INDEX_NAME': 'haystack',
     },
 }
+
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'

@@ -17,7 +17,7 @@
                 </li>
                 <li>
                     <strong><p>회원정보</p></strong>
-                    <span><a href="#" onclick="loadTab('account_edit')">수정</a></span>
+                    <span><a href="{% url 'update_profile' %}" >수정</a></span>
                     <span><a href="#" onclick="loadTab('account_delete')">삭제</a></span>
                 </li>
                 <li>
@@ -53,13 +53,6 @@
         </div>
         <div class="account_info" id="my-posts">
             <p>내 게시글</p>
-        </div>
-
-        <div class="account_info" id="account_edit">
-            <strong><p>내 정보</p></strong>
-            <label></label>
-            <a href="{% url 'account_change_password' %}">비밀 번호 변경하기</a>
-
         </div>
         <div class="account_info" id="account_delete">
             <p>정말 탈퇴하시겠습니까?</p>

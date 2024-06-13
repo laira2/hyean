@@ -1,10 +1,32 @@
 from django.shortcuts import render, redirect
-from .form import UserRegisterForm, LoginForm
+from django.urls import reverse
+from django.views.decorators.http import require_http_methods
+
+from .form import UserRegisterForm, LoginForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from .models import Profile
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('account')  # 수정 후 리디렉션할 URL
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'user_info_update.html', context)
 
 def user_login(request):
     if request.method =='POST':
@@ -39,7 +61,7 @@ def signup(request): #회원가입
             detail_address = signup_form.cleaned_data['detail_address']
             profile = Profile.objects.create(user=new_user, phone_number=phone_number, address=address,
                                              detail_address=detail_address)
-            return render(request, 'signup.html',{"new_user":new_user})
+            return redirect('login')
     else: #POST 방식 외로 접근했을 때
         signup_form=UserRegisterForm()
     return render(request, 'signup.html',{"signup_form":signup_form})
@@ -55,5 +77,7 @@ def account(request):
 def delete_account(request):
     if request.user.is_authenticated:
         request.user.delete()
-        return render(request, 'account_logout')
+        logout(request)
+        request.session.flush()
+        return redirect('index')
     return redirect('login.html')

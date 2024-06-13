@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<section id="account_container">
+    <div class="account_wrap">
+        <div class="account_info" id="account_edit">
+            <strong><p>내 정보</p></strong>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ user_form.as_p }}
+                {{ profile_form.as_p }}
+                <button type="submit">Update</button>
+            </form>
+
+            <a href="{% url 'account_change_password' %}">비밀 번호 변경하기</a>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

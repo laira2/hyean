@@ -119,7 +119,7 @@ h2 a {
     font-size: 10px;
 }
 
-/* nav 영역!!!!! */
+/* nav 영역!!!!! =============================== */
 
 .hastag ul {
     text-align: center;
@@ -178,6 +178,10 @@ section {
     border-top: 3px solid black;
     padding-top: 20px;
     height: 100%;
+}
+
+.content_container:nth-child(2n) {
+    background-color: #ff000020;
 }
 
 .content_wrap {

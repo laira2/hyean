@@ -71,7 +71,7 @@ $(function(){
 function searchInput() {
     let searchValue = $('#searchInput').val().trim()
     if (searchValue.length > 1) {
-        location.href = "search/" + searchValue + "/";
+//        location.href = "search/" + searchValue + "/";
         console.log(searchValue);
     } else {
         alert('검색어가 너무 짧습니다.')
@@ -85,12 +85,12 @@ $(document).ready(function(){
     })
 })
 
-function openTab(tabName) {
-  // 모든 탭을 숨김
-  var tabs = document.getElementsByClassName("tab");
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].style.display = "none";
-  }
-  // 선택한 탭을 보임
-  document.getElementById(tabName).style.display = "block";
-}
+var count = 2;
+window.addEventListener('scroll', function() {
+    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        var toAdd = document.createElement("div");
+        toAdd.classList.add(".content_wrap")
+        toAdd.textContent = `${++count}번째 블록`;
+        document.querySelector('.content_container').appendChild(toAdd)
+    }
+});

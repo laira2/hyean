@@ -4,6 +4,7 @@
 <section>
     <div class="mainpage_content_container">
         <div class="section_wrap">
+            <!-- 슬릭 슬라이더 컨테이너: 여러 이미지 슬라이드를 표시 -->
             <div class="slick_container">
                 <div><img src="{% static 'img/gucciSeoul.jpeg' %}" alt=""></div>
                 <div><img src="{% static 'img/korean_mood1.jpeg' %}" alt=""></div>
@@ -13,7 +14,51 @@
                 <div><img src="{% static 'img/seoulcity.jpeg' %}" alt=""></div>
             </div>
         </div>
+
         <div class="content_container">
+            <div class="content_wrap">
+                <!-- 이미지 리스트: 캐시된 이미지 정보를 반복하여 각 이미지의 정보를 표시 -->
+                <ul>
+                    {% for image_info in image_info_list %}
+                    <li>
+                        <div class="img_wrap">
+                            <!-- 이미지를 클릭하면 상세 페이지로 이동하도록 설정 -->
+                            <a href="{% url 'detail' image_info.art_name %}">
+                                <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px; min-height: 350px">
+                            </a>
+                            <div class="img_info">
+                                <!-- 이미지의 상세 정보 표시 -->
+                                <p><strong>작품명 :</strong>{{ image_info.art_name }}</p>
+                                <p><strong>일련번호 :</strong>{{ image_info.artCd }}</p>
+                                <p><strong>작품가격 :</strong>{{ image_info.price }}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                    {% if art_list %}
+                        <h2>검색 결과</h2>
+                            <ul>
+                                {% for art in art_list %}
+                                    <li>
+                                        <p>작품 번호: {{ image_info.artCd }}</p>
+                                        <p>작품명: {{ image_info.art_name }}</p>
+                                        <p>이미지:
+                                            {% if art.image_url %}
+                                                <img src="{{ art.image_url }}" alt="작품 이미지">
+                                            {% else %}
+                                                이미지 없음
+                                            {% endif %}
+                                        </p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                    {% else %}
+<!--                        <p>검색된 작품이 없습니다.</p>-->
+                    {% endif %}
+            </div>
+
+            <!-- 무한스크롤이 될 녀석들 -->
             <div class="content_wrap">
                 <ul>
                     {% for image_info in image_info_list %}
@@ -29,28 +74,30 @@
                     </li>
                     {% endfor %}
                 </ul>
-<!--                {% if art_list %}-->
-<!--                    <h2>검색 결과</h2>-->
-<!--                        <ul>-->
-<!--                            {% for art in art_list %}-->
-<!--                                <li>-->
-<!--                                    <p>작품 번호: {{ art.cllctNum }}</p>-->
-<!--                                    <p>작품명: {{ art.artNm }}</p>-->
-<!--                                    <p>이미지:-->
-<!--                                        {% if art.image_url %}-->
-<!--                                            <img src="{{ art.image_url }}" alt="작품 이미지">-->
-<!--                                        {% else %}-->
-<!--                                            이미지 없음-->
-<!--                                        {% endif %}-->
-<!--                                    </p>-->
-<!--                                </li>-->
-<!--                            {% endfor %}-->
-<!--                        </ul>-->
-<!--                {% else %}-->
-<!--                    <p>검색된 작품이 없습니다.</p>-->
-<!--                {% endif %}-->
+                    {% if art_list %}
+                        <h2>검색 결과</h2>
+                            <ul>
+                                {% for art in art_list %}
+                                    <li>
+                                        <p>작품 번호: {{ image_info.artCd }}</p>
+                                        <p>작품명: {{ image_info.art_name }}</p>
+                                        <p>이미지:
+                                            {% if art.image_url %}
+                                                <img src="{{ art.image_url }}" alt="작품 이미지">
+                                            {% else %}
+                                                이미지 없음
+                                            {% endif %}
+                                        </p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                    {% else %}
+<!--                        <p>검색된 작품이 없습니다.</p>-->
+                    {% endif %}
             </div>
         </div>
     </div>
+
+
 </section>
 {% endblock %}

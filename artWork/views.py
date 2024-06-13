@@ -198,3 +198,60 @@ async def search(request):
 
     print(f"검색어: {search_query}, 검색결과 {art_list}")
     return render(request, 'index.html', {'search_query': search_query, 'art_list': art_list})
+
+async def infiniteView(request):
+    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
+    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+
+    await get_data(base_url)
+
+    info_list = list(cached_data['art_names'])
+
+    image_info_dict = {}
+
+
+    async with aiohttp.ClientSession() as session:
+        for art_name in info_list:
+            image_params = {
+                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+                "pageNo": "1",
+                "numOfRows": "5",
+                "returnType": "json",
+                "artNm": art_name
+            }
+            try:
+                full_url = image_api_url + '?' + urlencode(image_params)
+
+                image_response = await fetch(session, full_url, cache_key=full_url)
+
+                if image_response:
+                    image_data = image_response.get('response', {}).get('body', {}).get('items', [])
+
+                    if image_data:
+                        for image_item in image_data:
+                            file_name = image_item.get('fileNm', '')
+                            file_url = image_item.get('fileUrl', '')
+                            if file_name and file_url:
+                                file_name_prefix = file_name[:4]
+                                image_info_dict[file_name_prefix] = {
+                                    'art_name': art_name,
+                                    'file_name': file_name,
+                                    'file_url': file_url,
+                                    'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
+                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
+                                    'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
+                                    'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
+                                }
+                else:
+                    print(f"이미지를 가져오지 못했습니다. {art_name}.")
+            except aiohttp.ClientError as e:
+                print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}")
+                print("3초 후 다시 시도합니다.")
+                await asyncio.sleep(3)
+
+    for image_info in image_info_dict.values():
+        price = random.randint(1000, 10000) * 10000
+        image_info['price'] = price
+
+    image_info_list = list(image_info_dict.values())
+    return render(request, 'index.html', {'image_info_list': image_info_list})

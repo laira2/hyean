@@ -2,22 +2,18 @@
 import requests.exceptions
 import requests
 from django.shortcuts import render
-import random  # 난수 생성 함수 모듈
-import asyncio  # 비동기 작업을 위한 asyncio 모듈
-import aiohttp  # 비동기 HTTP 클라이언트 라이브러리인 aiohttp를 가져오며, 비동기적으로 HTTP 요청 및 응답을 받아올 수 있다.
-from django.shortcuts import render  # 장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
-from urllib.parse import urlencode  # 딕셔너리를 쿼리 문자열로 변환하는데 사용
+import random  #난수 생성 함수 모듈
+import asyncio  #비동기 작업을 위한 asyncio 모듈
+import aiohttp  #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 가져오며, 비동기적으로 HTTP 요청 및 응답을 받아올 수 있다.
+from django.shortcuts import render  #장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
+from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환하는데 사용
 from haystack.query import SearchQuerySet
-import urllib.request
-import json
 
 # def index(request):
 #    return render(request, 'index.html')
 
-service_Key = "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg=="
 
-
-class OpenAPIView:  # templates의 openapi.html만 바라보게 하기 위해 사용
+class OpenAPIView: #templates의 openapi.html만 바라보게 하기 위해 사용
     pass
 
 
@@ -161,6 +157,7 @@ async def openapi_view(request):
 
 async def search(request):
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+
     search_query = request.GET.get('q', '')
     print(f"검색한 내용: {search_query}")
 

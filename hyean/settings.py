@@ -6,7 +6,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -16,8 +15,7 @@ SECRET_KEY = 'django-insecure-lynfxxv6&86x0r92yug0htfw22736k2szu6!shll%z8y9+#(gb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hyean.com','localhost','127.0.0.1']
-
+ALLOWED_HOSTS = ['hyean.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -29,21 +27,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'shop',
     'user_account',
     'django_extensions',
     'openapi',
     'rest_framework',
     'drf_yasg',
     'artWork',
-    # allauth를 사용한 구글 , 네이버 로그인 구현
-    # 카카오는 오류로 구현 안됨. 추후 확인 필요
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
-
+    'cart.apps.CartConfig',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +60,9 @@ ROOT_URLCONF = 'hyean.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',  # 기본 템플릿 디렉터리
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hyean.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -88,7 +86,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -108,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -120,18 +116,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-STATICFILES_DIRS = ( # static 폴더를 찾기 위한 코드를 추가
-    #os.path.join('static/'), #상대경로 - aiden
-    #os.path.join('static/')사용하려면 위에 import os.path도 사용해야함 둘이 세트임 -aiden
-    BASE_DIR / 'static/', #절대경로 - aiden
-)
-
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # 추가된 정적 파일 디렉터리
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -142,7 +134,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
     'social_core.backends.google.GoogleOAuth2',
-
 ]
 
 SITE_ID = 3
@@ -160,3 +151,5 @@ HAYSTACK_CONNECTIONS = {
 }
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
+CART_SESSION_ID = 'cart'

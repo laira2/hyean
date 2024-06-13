@@ -145,6 +145,7 @@ async function loadMore() {
         console.error('Error loading more data:', error);
         isLoading = false;
     }
+
 }
 
 window.addEventListener('scroll', () => {
@@ -152,5 +153,3 @@ window.addEventListener('scroll', () => {
         loadMore();
     }
 });
-
-

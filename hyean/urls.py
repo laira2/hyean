@@ -5,6 +5,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from openapi.views import openapi_view  # 수정된 부분
 from user_account import views as account_views
+from cart import views as cart_views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -32,5 +33,8 @@ urlpatterns = [
     path('signup/', account_views.signup, name="signup"),
     path('account/', account_views.account, name="account"),
     path('delete/', account_views.delete_account, name ="delete_account"),
-    path('update/', account_views.update_profile,name="update_profile")
+    path('update/', account_views.update_profile,name="update_profile"),
+
+    path('cart/', include('cart.urls')),  # 'cart' 앱의 URLconf를 include
+    path('shop/', include('shop.urls')),
 ]

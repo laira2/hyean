@@ -34,5 +34,7 @@ urlpatterns = [
     path('account/', account_views.account, name="account"),
     path('delete/', account_views.delete_account, name ="delete_account"),
     path('update/', account_views.update_profile,name="update_profile"),
-    path('cart/', cart_views.cart_detail, name='cart_detail'),
+
+    path('cart/', include('cart.urls')),  # 'cart' 앱의 URLconf를 include
+    path('shop/', include('shop.urls')),
 ]

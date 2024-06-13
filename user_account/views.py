@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .form import UserRegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from .models import Profile
@@ -38,10 +39,21 @@ def signup(request): #회원가입
             detail_address = signup_form.cleaned_data['detail_address']
             profile = Profile.objects.create(user=new_user, phone_number=phone_number, address=address,
                                              detail_address=detail_address)
-            return render(request, 'index.html',{"new_user":new_user})
+            return render(request, 'signup.html',{"new_user":new_user})
     else: #POST 방식 외로 접근했을 때
         signup_form=UserRegisterForm()
     return render(request, 'signup.html',{"signup_form":signup_form})
-
+@login_required
 def account(request):
-    return render(request, 'account.html')
+    user_info= request.user
+    if not user_info:
+        return render(request, 'login.html')
+    return render(request, 'account.html', {'user':user_info})
+
+
+@login_required
+def delete_account(request):
+    if request.user.is_authenticated:
+        request.user.delete()
+        return render(request, 'account_logout')
+    return redirect('login.html')

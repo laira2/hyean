@@ -1,7 +1,11 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 from .models import Profile
+
+
+
 class LoginForm(forms.Form):
     username= forms.CharField(label="ID", widget=forms.TextInput(attrs={'class': 'id_input'}))
     password = forms.CharField(label="PW", widget=forms.PasswordInput(attrs={'class': 'id_input'}))
@@ -53,3 +57,8 @@ class UserRegisterForm(forms.ModelForm): #회원 가입 form
         if commit:
             user.save()
         return user
+
+# class UserAccountChangeForm(forms.ModelForm):
+#     class Meta(UserRegisterForm.Meta):
+#         model = get_user_model()
+#         fields = ['email','address','detail_address','phone1','phone2','phone3']

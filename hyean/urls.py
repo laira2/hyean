@@ -31,4 +31,5 @@ urlpatterns = [
     path('login/', account_views.user_login, name='login'),
     path('signup/', account_views.signup, name="signup"),
     path('account/', account_views.account, name="account"),
+    path('delete/', account_views.delete_account, name ="delete_account"),
 ]

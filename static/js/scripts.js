@@ -84,3 +84,13 @@ $(document).ready(function(){
         }
     })
 })
+
+function openTab(tabName) {
+  // 모든 탭을 숨김
+  var tabs = document.getElementsByClassName("tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].style.display = "none";
+  }
+  // 선택한 탭을 보임
+  document.getElementById(tabName).style.display = "block";
+}

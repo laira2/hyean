@@ -85,13 +85,72 @@ $(document).ready(function(){
     })
 })
 
-var count = 2;
-var contentWrap = document.querySelector('.content_wrap');
+// 무한 스크롤 테스트
+//$(document).ready(function() {
+//        var count = 1;
+//        var $contentWrap = $('.content_wrap');
+//        var $contentContainer = $('.content_container');
+//
+//        $(window).scroll(function() {
+//            if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+//                var $cloneContent = $contentWrap.clone();
+//                $cloneContent.find('strong').text(`${count++}번째 블록`);
+//                $contentContainer.append($cloneContent);
+//            }
+//        });
+//    });
 
-window.addEventListener('scroll', function() {
-    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        var cloneContent = contentWrap.cloneNode(true);
-        toAdd.textContent = `${++count}번째 블록`;
-        document.querySelector('.content_container').appendChild(cloneContent);
+
+
+
+
+
+let page = 1;
+let isLoading = false;
+
+async function loadMore() {
+    if (isLoading) return;
+    isLoading = true;
+
+    try {
+        document.getElementById('load-more').style.display = 'block';
+
+        const response = await fetch(`infinite-view/`);
+        const data = await response.json();
+
+        const imageInfoList = data.image_info_list;
+        const ulElement = document.getElementById('art-list');
+
+        imageInfoList.forEach(imageInfo => {
+            const liElement = document.createElement('li');
+            liElement.innerHTML = `
+                <div class="img_wrap">
+                    <a href="/detail/${imageInfo.art_name}">
+                        <img src="${imageInfo.file_url}" alt="${imageInfo.art_name}" style="max-width: 300px; min-height: 350px;">
+                    </a>
+                    <div class="img_info">
+                        <p><strong>작품명 :</strong> ${imageInfo.art_name}</p>
+                        <p><strong>일련번호 :</strong> ${imageInfo.artCd}</p>
+                        <p><strong>작품가격 :</strong> ${imageInfo.price}</p>
+                    </div>
+                </div>
+            `;
+            ulElement.appendChild(liElement);
+        });
+
+        page++;
+        isLoading = false;
+        document.getElementById('load-more').style.display = 'none';
+    } catch (error) {
+        console.error('Error loading more data:', error);
+        isLoading = false;
+    }
+}
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 100) {
+        loadMore();
     }
 });
+
+

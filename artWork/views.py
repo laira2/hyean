@@ -159,47 +159,45 @@ async def openapi_view(request):
     return render(request, 'index.html', {'image_info_list': image_info_list})
 
 
-def search(request):
+async def search(request):
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
-
     search_query = request.GET.get('q', '')
-    print(f"검색한내용 :{search_query}")
+    print(f"검색한 내용: {search_query}")
 
-    params = {
-        "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-        "pageNo": "1",
-        "numOfRows": "5",
-        "returnType": "json",
-        "artNm": search_query
-    }
+    art_list = []
 
-    response = requests.get(image_api_url, params=params)
+    if search_query:  # 검색어가 있는 경우에만 API 요청
+        async with aiohttp.ClientSession() as session:
+            try:
+                image_params = {
+                    "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+                    "pageNo": "0",
+                    "numOfRows": "100",
+                    "returnType": "json",
+                    "artNm": search_query
+                }
+                full_image_url = image_api_url + '?' + urlencode(image_params)
+                #print(f"요청 URL: {full_image_url}")
+                image_response = await fetch(session, full_image_url)
+                #print(f"API 응답: {image_response}")
 
-    if response.status_code == 200:
-        data = response.json()
-        if 'items' in data['response']['body']:
-            if 'item' in data['response']['body']['items']:
-                art_list = data['response']['body']['items']['item']
-                print(f"art_list에는 {art_list}가 담겨있다.")
-            else:
-                art_list = []
-        else:
-            print("데이터에 아이템이 없음")
+                if image_response and 'response' in image_response and 'body' in image_response['response'] and 'items' in image_response['response']['body']:
+                    items = image_response['response']['body']['items']
+                    if isinstance(items, dict):
+                        items = [items]
 
-        for art in art_list:
-            image_params = {
-                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8",
-                "artId": art['artId']
-            }
-            image_response = requests.get(image_api_url, params=image_params)
-            if image_response.status_code == 200:
-                image_data = image_response.json()
-                if 'item' in image_data['response']['body']['items']:
-                    art["image_url"] = image_data['response']['body']['items']['item']['imgUrl']
-                else:
-                    art["image_url"] = None
-            else:
-                print(f"아트 {art['artId']}의 이미지 API 요청 실패:", image_response.status_code)
-                art["image_url"] = None
+                    for item in items:
+                        art_name = item.get('artNm', '')
+                        if art_name and search_query in art_name:
+                            art_info = {
+                                'art_name': art_name,
+                                'image_url': item.get('fileUrl', None)
+                            }
+                            art_list.append(art_info)
+                    #print(f"리스트 확인: {art_list}")
 
-    return render(request, 'search.html', {'art_list': art_list, 'search_query': search_query})
+            except Exception as e:
+                print(f"API 요청 실패: {e}")
+
+    print(f"검색어: {search_query}, 검색결과 {art_list}")
+    return render(request, 'index.html', {'search_query': search_query, 'art_list': art_list})

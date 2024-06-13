@@ -41,13 +41,15 @@
                             <ul>
                                 {% for art in art_list %}
                                     <li>
-                                        <p>작품 번호: {{ image_info.artCd }}</p>
-                                        <p>작품명: {{ image_info.art_name }}</p>
+                                        <p><strong>일련번호 :</strong>{{ art.artCd }}</p>
+                                        <p><strong>작품명 :</strong>{{ art.art_name }}</p>
+                                        <p><strong>작가명 :</strong>{{ art.fileNm|slice:":4" }}</p>
+                                        <p><strong>작품가격 :</strong>{{ art.price }}</p>
                                         <p>이미지:
                                             {% if art.image_url %}
-                                                <img src="{{ art.image_url }}" alt="작품 이미지">
+                                            <img src="{{ art.image_url }}" alt="작품 이미지">
                                             {% else %}
-                                                이미지 없음
+                                            이미지 없음
                                             {% endif %}
                                         </p>
                                     </li>

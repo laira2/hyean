@@ -60,11 +60,11 @@ async def get_data(base_url, session):
         if items:  # 응답에서 추출한 작품 정보가 존재하는지 확인
             for item in items:  # 작품 정보가 있을 경우 각 작품 정보에 대해 반복
                 art_name = item.get('artNm')  # 작품명 가져오기
+                artCd = item.get('artCd')
                 if art_name:  # 작품명이 존재할 경우
                     art_name_stripped = art_name.strip()  # 작품명 있을 경우 양쪽 공백 제거 후 변수에 할당
                     if art_name_stripped:  # 작품명이 존재할 경우
                         cached_data['art_names'].add(art_name_stripped)  # 캐싱된 데이터에 작품명 추가. 중복된 작품은 추가하지 않는다.
-                        artCd = hashlib.sha1(art_name_stripped.encode()).hexdigest()[:10]  # 작품명을 해시하여 일련번호 생성
                         categry = item.get('categry') if item.get('categry') else '기타'  # 작품 카테고리, 없는 경우 기타 입력
                         cached_data['art_dimensions'][art_name_stripped] = {  # 가로, 세로 값 딕셔너리 저장
                             'art_width': generate_dimension(), # 가로 랜덤 생성 후 저장
@@ -101,9 +101,9 @@ async def get_image_data(image_api_url, session):
                     art_name = image_item.get('artNm', '')  # 작품명 가져오기
                     file_name = image_item.get('fileNm', '')  # 파일명 가져오기
                     file_url = image_item.get('fileUrl', '')  # 파일 URL 가져오기
+                    artCd = image_item.get('artCd', '') # 작품 일련번호 가져오기
                     if art_name and file_name and file_url:  # 작품명, 파일명, 파일 URL이 모두 존재하는 경우에만 처리
                         file_name_prefix = file_name[:4]  # 파일 이름의 앞 4글자 추출
-                        artCd = generate_artCd(art_name, cached_data['art_info'].get(art_name, {}).get('artist_name', ''))  # 작품 일련번호 생성
                         art_width = generate_dimension()  # 가로 크기 랜덤 생성
                         art_vrticl = generate_dimension()  # 세로 크기 랜덤 생성
                         image_info_dict[file_name_prefix] = {  # 이미지 정보를 딕셔너리에 저장
@@ -121,11 +121,6 @@ async def get_image_data(image_api_url, session):
         image_info['price'] = price  # 가격 정보 저장
 
     return list(image_info_dict.values())  # 이미지 정보 딕셔너리의 값을 리스트로 반환하여 저장
-
-def generate_artCd(art_name, artist_name):
-    """작품명과 작가명을 이용하여 일련번호 생성"""
-    unique_str = f"{art_name}_{artist_name}_{time.time()}_{random.randint(1000, 9999)}"  # 고유 문자열 생성
-    return hashlib.sha1(unique_str.encode()).hexdigest()[:10]  # 고유 문자열을 해시하여 일련번호 생성 후 반환
 
 def generate_dimension():
     """가로, 세로 크기 랜덤 생성"""

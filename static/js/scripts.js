@@ -86,11 +86,12 @@ $(document).ready(function(){
 })
 
 var count = 2;
+var contentWrap = document.querySelector('.content_wrap');
+
 window.addEventListener('scroll', function() {
     if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        var toAdd = document.createElement("div");
-        toAdd.classList.add(".content_wrap")
+        var cloneContent = contentWrap.cloneNode(true);
         toAdd.textContent = `${++count}번째 블록`;
-        document.querySelector('.content_container').appendChild(toAdd)
+        document.querySelector('.content_container').appendChild(cloneContent);
     }
 });

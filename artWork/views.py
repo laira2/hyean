@@ -85,6 +85,7 @@ async def get_data(base_url, session):
                             'categry': categry # 작품 카테고리 저장
                         }
 
+
 async def get_image_data(image_api_url, session):
     """비동기적으로 이미지 데이터를 가져오고 캐싱"""
     image_info_dict = {}  # 이미지 정보를 저장할 빈 딕셔너리 생성
@@ -179,7 +180,7 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                     items = image_response['response']['body']['items']
                     if isinstance(items, dict):
                         items = [items]
-                    
+
                     seen_art_cds = set() # 이미 추가된 일련번호를 저장할 집합
 
                     for item in items:
@@ -211,7 +212,8 @@ async def infiniteView(request):
     base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
 
-    await get_data(base_url)
+    async with aiohttp.ClientSession() as session:
+        await get_data(base_url, session)
 
     info_list = list(cached_data['art_names'])
 
@@ -236,19 +238,19 @@ async def infiniteView(request):
                             for image_item in image_data:
                                 file_name = image_item.get('fileNm', '')
                                 file_url = image_item.get('fileUrl', '')
-                            if file_name and file_url:
-                                file_name_prefix = file_name[:4]
-                                image_info_dict[file_name_prefix] = {
-                                    'art_name': art_name,
-                                    'file_name': file_name,
-                                    'file_url': file_url,
-                                    'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
-                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
-                                    'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
-                                    'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
-                                }
+                                if file_name and file_url:
+                                    file_name_prefix = file_name[:4]
+                                    image_info_dict[file_name_prefix] = {
+                                        'art_name': art_name,
+                                        'file_name': file_name,
+                                        'file_url': file_url,
+                                        'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
+                                        'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
+                                        'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
+                                        'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
+                                    }
                         else:
-                           print(f"이미지를 가져오지 못했습니다. {art_name}.")
+                            print(f"이미지를 가져오지 못했습니다. {art_name}.")
             except aiohttp.ClientError as e:
                 print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}")
                 print("3초 후 다시 시도합니다.")

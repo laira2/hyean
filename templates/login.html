@@ -11,6 +11,9 @@
                     {% csrf_token %}
                     <div class="login_btn_box">
                         {% load socialaccount %}
+                        <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'kakao' %}'">
+                                kakao
+                        </button>
                         <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
                                 네이버
                         </button>

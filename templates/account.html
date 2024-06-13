@@ -1,50 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
 <section id="account_container">
-            <div class="account_wrap">
-                <aside class="account_aside">
-                    <ul>
-                        <li>
-                            <strong><p>나의쇼핑</p></strong>
-                            <span><a href="#">주문내역</a></span><br>
-                            <span><a href="#">카트</a></span><br>
-                            <span><a href="#">선물함</a></span><br>
-                            <span><a href="#">위시 리스트</a></span>
-                        </li>
-                        <li>
-                            <strong><p>고객센터</p></strong>
-                            <span><a href="#">내 게시글</a></span><br>
-                            <span><a href="#">1:1 문의</a></span>
+    <div class="account_wrap">
+        <aside class="account_aside">
+            <ul>
+                <li>
+                    <strong><a href="#" onclick="loadTab('mypage')"><p>나의쇼핑</p></a></strong>
+                    <span><a href="#" onclick="loadTab('order-history')">주문내역</a></span><br>
+                    <span><a href="#" onclick="loadTab('gift')">선물함</a></span><br>
+                    <span><a href="#" onclick="loadTab('wishlist')">위시 리스트</a></span>
+                </li>
+                <li>
+                    <strong><p>고객센터</p></strong>
+                    <span><a href="#" onclick="loadTab('my-posts')">내 게시글</a></span><br>
+                    <span><a href="#" >1:1 문의</a></span>
+                </li>
+                <li>
+                    <strong><p>회원정보</p></strong>
+                    <span><a href="{% url 'update_profile' %}" >수정</a></span>
+                    <span><a href="#" onclick="loadTab('account_delete')">삭제</a></span>
+                </li>
+                <li>
+                    <strong><p>쿠폰</p></strong>
+                    <span><a href="#" onclick="loadTab('issue-coupon')">발급</a></span>
+                    <span><a href="#">등록</a></span>
+                </li>
+            </ul>
+        </aside>
 
-                        </li>
-                        <li>
-                            <strong><p>회원정보</p></strong>
-                            <span><a href="#">수정</a></span>
-                            <span><a href="#">삭제</a></span>
-
-                        </li>
-                        <li>
-                            <strong><p>쿠폰</p></strong>
-                            <span><a href="#">발급</a></span>
-                            <span><a href="#">등록</a></span>
-                        </li>
-                    </ul>
-                </aside>
-
-                <div class="account_info">
-                    <div class="account_level">
-                        <span><i class="fa-solid fa-baby"></i></span>
-                        <p>나의 등급</p>
-                        <div class="account_level_data"><p>Lv. {{account}}</p></div>
-                    </div>
-
-                    <div class="account_coupon_info">
-                        <span><i class="fa-solid fa-coins"></i></span>
-                        <p>내 적립금</p>
-                        <div class="account_coupon_data"><p>{{0000}} 원</p></div>
-                    </div>
-
-                </div>
+        <div class="account_info" id="mypage">
+            <div class="account_level">
+                <span><i class="fa-solid fa-baby"></i></span>
+                <p>나의 등급</p>
+                <div class="account_level_data"><p>Lv. {{account}}</p></div>
             </div>
-        </section>
+
+            <div class="account_coupon_info">
+                <span><i class="fa-solid fa-coins"></i></span>
+                <p>내 적립금 / 쿠폰</p>
+                <div class="account_coupon_data"><p>{{0000}} 원</p></div>
+            </div>
+
+        </div>
+        <div class="account_info" id="order-history">
+            <p> 주문 내역</p>
+        </div>
+        <div class="account_info" id="gift">
+            <p>선물함</p>
+        </div>
+        <div class="account_info" id="wishlist">
+            <p>위시리스트</p>
+        </div>
+        <div class="account_info" id="my-posts">
+            <p>내 게시글</p>
+        </div>
+        <div class="account_info" id="account_delete">
+            <p>정말 탈퇴하시겠습니까?</p>
+            <form action="{% url 'delete_account' %}" method="post">
+                {% csrf_token %}
+                <label>비밀번호 확인 <input type="password"></label>
+                <input type="submit" value="탈퇴하기">
+            </form>
+        </div>
+        <div class="account_info" id="issue_coupon">
+            <p>쿠폰 입력</p>
+        </div>
+
+
+    </div>
+
+</section>
+
+<script>
+   window.onload = function() {
+    loadTab('mypage');
+};
+
+function loadTab(tabId) {
+
+    var tabs = document.querySelectorAll('.account_info');
+    tabs.forEach(function(tab) {
+        tab.style.display = 'none';
+    });
+
+
+    var selectedTab = document.getElementById(tabId);
+    if (selectedTab) {
+        selectedTab.style.display = 'block';
+    }
+}
+</script>
 {% endblock %}

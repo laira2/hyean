@@ -1,7 +1,12 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
 from .models import Profile
+
+
+
 class LoginForm(forms.Form):
     username= forms.CharField(label="ID", widget=forms.TextInput(attrs={'class': 'id_input'}))
     password = forms.CharField(label="PW", widget=forms.PasswordInput(attrs={'class': 'id_input'}))
@@ -53,3 +58,24 @@ class UserRegisterForm(forms.ModelForm): #회원 가입 form
         if commit:
             user.save()
         return user
+
+class UserUpdateForm(forms.ModelForm):
+    username = forms.CharField(label='아이디', max_length=100, widget=forms.TextInput(
+        attrs={'id': 'username', 'placeholder': '아이디를 입력하세요.', 'required': True, 'readonly': True}))
+    email = forms.EmailField(label='이메일', widget=forms.EmailInput(
+        attrs={'id': 'email', 'placeholder': '이메일을 입력하세요.', 'required': True}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.ModelForm):
+    phone_number = forms.CharField(label='전화번호', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
+    address = forms.CharField(label='주소', widget=forms.TextInput(
+        attrs={'id': 'address', 'placeholder': '주소를 입력해주세요', 'required': True}))
+    detail_address = forms.CharField(label='상세주소', required=False, widget=forms.TextInput(
+        attrs={'id': 'detail_address', 'placeholder': '상세주소를 입력해주세요'}))
+
+    class Meta:
+        model = Profile
+        fields = ['phone_number', 'address', 'detail_address']

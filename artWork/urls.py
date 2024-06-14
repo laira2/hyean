@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from . import detail_page
 from .detail_page import detail_view
-from cart.views import add_cart , cart_detail, cart_remove
+from cart.views import add_cart, cart_detail, cart_remove
 
 urlpatterns = [
     # path('', views.index, name='index'),  # 예를 들어, index view로 연결

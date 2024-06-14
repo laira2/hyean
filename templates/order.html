@@ -9,11 +9,12 @@
             </h2>
             <form method="post" id="signup_form">
                 {% csrf_token %}
-                {% csrf_token %}
-                {{ form.artCd }}
-                {{ form.art_name }}
-                {{ form.file_name }}
-                {{ form.price }}
+                {{ order_form.artCd.as_hidden }}
+                {{ order_form.art_name.as_hidden }}
+                {{ order_form.quantity.as_hidden }}
+                {{ order_form.price.as_hidden }}
+                {{ order_form.image_url.as_hidden }}
+                {{ order_form.user.as_hidden }}
 
                 <div class="order_name_box">
                     {{ order_form.name }}

@@ -3,6 +3,7 @@ from . import views
 from . import detail_page
 from .detail_page import detail_view
 from cart.views import add_cart , cart_detail, cart_remove
+from payment.views import pay
 
 urlpatterns = [
     # path('', views.index, name='index'),  # 예를 들어, index view로 연결
@@ -17,6 +18,7 @@ urlpatterns = [
     path('infinite-view/', views.infiniteView, name='infinite-view'),
     path('add/',add_cart,name ="add_cart"),
     path('cart/detail/',cart_detail, name="cart_detail" ),
-    path('cart/remove/', cart_remove, name="cart_remove")
+    path('cart/remove/', cart_remove, name="cart_remove"),
+    path('order/pay',pay)
 
 ]

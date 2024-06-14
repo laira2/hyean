@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h1>Your shopping cart</h1>
+<table class="cart">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Remove</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart %}
+        <tr>
+            <td>
+                <img src="{{ item.image_url }}" alt="{{ art_name }}" style="max-width: 500px;">
+            </td>
+            <td>{{ item.art_name }}</td>
+            <td>
+                <form action="{% url 'cart_remove'%}" method="post">
+                    <input type="hidden" name="artCd" value="{{ item.artCd }}">
+                    <input type="submit" value="Remove">
+                    {% csrf_token %}
+                </form>
+            </td>
+            <td class="num">${{ item.price }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total">
+            <td>Total</td>
+            <td colspan="4"></td>
+            <td class="num">${{ cart.get_total_price }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

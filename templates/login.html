@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="login_container">
+        <div class="login_wrap">
+            <h2 class="logo">
+                    <a href="#">In site Art Gallery</a>
+            </h2>
+            <form method="post">
+                <div class="login_form">
+                    {{ login_form.as_p }}
+                    {% csrf_token %}
+                    <div class="login_btn_box">
+                        {% load socialaccount %}
+                        <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'kakao' %}'">
+                                kakao
+                        </button>
+                        <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
+                                네이버
+                        </button>
+                        <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'google' %}'">
+                                구글
+                        </button>
+                        <button class="login_btn" type="submit">로그인</button>
+                    </div>
+                    <div class="login_to_signup_box">
+                        <p style="font-size:13px">
+                            아직 회원이 아니신가요?
+                            <button class="signup_btn"><a href="{% url 'signup' %}">회원 가입</a></button>
+                            <button class="back_btn">돌아가기</button>
+                        </p>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

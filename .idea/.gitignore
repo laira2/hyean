@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+`cert.key`
+
+`cert.crt`
+
+`__pycache__`
+
+`*.pyc`
+
+`db.sqlite3`

@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+<section id="search_section">
+    <div class="mainpage_content_container">
+        <div class="content_container">
+            <div class="content_wrap">
+                {% if art_list %}
+                <h2>{{ search_query }} 결과</h2>
+                <ul>
+                    {% for art in art_list %}
+                    <li>
+                        <div class="img_wrap">
+                            <p>
+                                {% if art.image_url %}
+                                <img src="{{ art.image_url }}" alt="작품 이미지" style="max-width: 300px; min-height: 350px">
+                                {% else %}
+                                이미지 없음
+                                {% endif %}
+                            </p>
+                            <div class="img_info">
+                                <p><strong>일련번호 :</strong>{{ art.artCd }}</p>
+                                <p><strong>작품명 :</strong>{{ art.art_name }}</p>
+                                <p><strong>작가명 :</strong>{{ art.fileNm|slice:":4" }}</p>
+                                <p><strong>작품가격 :</strong>{{ art.price }}</p>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>검색된 작품이 없습니다.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

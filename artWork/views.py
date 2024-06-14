@@ -85,6 +85,7 @@ async def get_data(base_url, session):
                             'categry': categry # 작품 카테고리 저장
                         }
 
+
 async def get_image_data(image_api_url, session):
     """비동기적으로 이미지 데이터를 가져오고 캐싱"""
     image_info_dict = {}  # 이미지 정보를 저장할 빈 딕셔너리 생성
@@ -179,7 +180,7 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                     items = image_response['response']['body']['items']
                     if isinstance(items, dict):
                         items = [items]
-                    
+
                     seen_art_cds = set() # 이미 추가된 일련번호를 저장할 집합
 
                     for item in items:
@@ -204,59 +205,19 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                 print(f"API 요청 실패: {e}")
 
     print(f"검색어: {search_query}, 검색결과 {art_list}")
-    return render(request, 'index.html', {'search_query': search_query, 'art_list': art_list})
+    return render(request, 'search.html', {'search_query': search_query, 'art_list': art_list})
 
 
 async def infiniteView(request):
-    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
-    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+    """View 함수로, 비동기적으로 데이터를 가져오고 렌더링"""
+    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"  # 기본 URL 설정
+    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"  # 이미지 API URL 설정
 
-    await get_data(base_url)
+    async with aiohttp.ClientSession() as session:  # aiohttp의 ClientSession 객체를 사용하여 비동기적으로 세션 생성
+        await get_data(base_url, session)  # get_data 함수를 사용하여 작품 정보를 가져오며, 비동기적으로 실행
+        image_info_list = await get_image_data(image_api_url, session)  # 이미지 정보를 비동기적으로 가져옴
 
-    info_list = list(cached_data['art_names'])
-
-    image_info_dict = {}
-
-    async with aiohttp.ClientSession() as session:
-        for art_name in info_list:
-            image_params = {
-                "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-                "pageNo": "1",
-                "numOfRows": "5",
-                "returnType": "json",
-                "artNm": art_name
-            }
-            try:
-                full_url = image_api_url + '?' + urlencode(image_params)
-                async with session.get(full_url) as response:
-                    if response.status == 200:
-                        image_response = await response.json()
-                        image_data = image_response.get('response', {}).get('body', {}).get('items', [])
-                        if image_data:
-                            for image_item in image_data:
-                                file_name = image_item.get('fileNm', '')
-                                file_url = image_item.get('fileUrl', '')
-                            if file_name and file_url:
-                                file_name_prefix = file_name[:4]
-                                image_info_dict[file_name_prefix] = {
-                                    'art_name': art_name,
-                                    'file_name': file_name,
-                                    'file_url': file_url,
-                                    'art_width': cached_data['art_dimensions'].get(art_name, {}).get('art_width', ''),
-                                    'art_vrticl': cached_data['art_dimensions'].get(art_name, {}).get('art_vrticl', ''),
-                                    'artCd': cached_data['art_info'].get(art_name, {}).get('artCd', ''),
-                                    'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')
-                                }
-                        else:
-                           print(f"이미지를 가져오지 못했습니다. {art_name}.")
-            except aiohttp.ClientError as e:
-                print(f"이미지를 가져오는 동안 오류가 발생했습니다. {art_name}: {e}")
-                print("3초 후 다시 시도합니다.")
-                await asyncio.sleep(3)
-
-    for image_info in image_info_dict.values():
-        price = random.randint(1000, 10000) * 10000
-        image_info['price'] = price
-
-    image_info_list = list(image_info_dict.values())
+    # 데이터를 정상적으로 불러오지 못한 경우, 빈 리스트 또는 오류 메시지 출력
+    if not image_info_list:  # 이미지 정보 리스트가 비어있는 경우
+        image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
     return JsonResponse({'image_info_list': image_info_list})

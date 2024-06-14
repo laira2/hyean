@@ -17,6 +17,6 @@ urlpatterns = [
     path('infinite-view/', views.infiniteView, name='infinite-view'),
     path('add/',add_cart,name ="add_cart"),
     path('cart/detail/',cart_detail, name="cart_detail" ),
-    path('cart/remove/<str:artCd>', cart_remove, name="cart_remove")
+    path('cart/remove/', cart_remove, name="cart_remove")
 
 ]

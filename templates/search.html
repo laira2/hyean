@@ -7,7 +7,7 @@
     <li>
         <p><strong>일련번호 :</strong>{{ art.artCd }}</p>
         <p><strong>작품명 :</strong>{{ art.art_name }}</p>
-        <p><strong>작가명 :</strong>{{ art.fileNm|slice:":4" }}</p>
+        <p><strong>작가명 :</strong>{{ file_name|slice:":3" }}</p>
         <p><strong>작품가격 :</strong>{{ art.price }}</p>
         <p>이미지:
             {% if art.image_url %}

@@ -23,7 +23,7 @@
                     <li>
                         <div class="img_wrap">
                             <!-- 이미지를 클릭하면 상세 페이지로 이동하도록 설정 -->
-                            <a href="{% url 'detail' image_info.art_name %}">
+                            <a href="{% url 'detail' image_info.artCd %}">
                                 <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px; min-height: 350px">
                             </a>
                             <div class="img_info">

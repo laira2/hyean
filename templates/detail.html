@@ -2,16 +2,22 @@
 {% block content %}
 <section>
     <div class="detail_content_container">
-        <h1>{{ art_name }}</h1>
-        <div class="detail_image">
-            <img src="{{ image_url }}" alt="{{ art_name }}" style="max-width: 500px;">
-        </div>
-        <div class="detail_info">
-            <p><strong>일련번호 :</strong> {{ art_info.artCd }}</p>
-            <p><strong>카테고리 :</strong> {{ art_info.categry }}</p>
-            <p><strong>작품 가로 :</strong> {{ art_dimensions.art_width }}</p>
-            <p><strong>작품 세로 :</strong> {{ art_dimensions.art_vrticl }}</p>
-        </div>
+        {% if error_message %}
+            <h1>{{ error_message }}</h1>
+        {% else %}
+            <h1>{{ art_name }}</h1>
+            <div class="detail_image">
+                <img src="{{ file_url }}" alt="{{ art_name }}" style="max-width: 500px;">
+            </div>
+            <div class="detail_info">
+                <p><strong>일련번호 :</strong> {{ art_info.artCd }}</p>
+                <p><strong>작가명 :</strong> {{ file_name|slice:":3" }}</p>
+                <p><strong>작품명 :</strong> {{ art_name }}</p>
+                <p><strong>작품크기 :</strong> {{ art_dimensions.art_width }} x {{ art_dimensions.art_vrticl }}</p>
+                <p><strong>가격 :</strong> {{ price }}</p>
+            </div>
+            <a href="{% url 'detail' art_info.artCd %}">다른 작품 보기</a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

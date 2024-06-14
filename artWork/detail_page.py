@@ -1,42 +1,49 @@
-def detail_view(request, art_name):
-    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
-    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+# detail_page.py
 
-    # 작품 정보 가져오기
-    params = {
-        "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-        "pageNo": "1",
-        "numOfRows": "1",
-        "returnType": "json",
-        "artNm": art_name
-    }
+from django.shortcuts import render
+import aiohttp
+from .views import cached_data, get_image_data  # 필요한 모듈 임포트
 
-    response = requests.get(base_url, params=params)
-    art_details = {}
+async def detail_view(request, artCd):
+    """상세 페이지를 렌더링하는 함수"""
+    try:
+        # 이미 캐시된 데이터에서 이미지 정보 가져오기
+        images = cached_data['images'].get(artCd, {})
+        print(f"이미지 데이터: {images}")
+        if not images:
+            raise Exception(f"Image data not found for artCd: {artCd}")
 
-    if response.status_code == 200:
-        data = response.json()
-        items = data.get('response', {}).get('body', {}).get('items', [])
-        if items:
-            art_details = items[0]
+        file_url = images.get('file_url', '')
+        price = images.get('price', 0)
 
-    # 이미지 정보 가져오기
-    image_params = {
-        "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-        "pageNo": "1",
-        "numOfRows": "5",
-        "returnType": "json",
-        "artNm": art_name
-    }
+        # 이미지 데이터 확인을 위한 프린트문 추가
+        print(f"file_url: {file_url}, artCd: {artCd}, price: {price}")
 
-    image_response = requests.get(image_api_url, params=image_params)
-    images = []
+        # 이미지와 관련된 메타 정보 가져오기
+        file_url = images.get('file_url', '')
+        file_name = images.get('file_name', '')
+        art_name = images.get('art_name', '')
+        art_width = images.get('art_width', '')
+        art_vrticl = images.get('art_vrticl', '')
+        price = images.get('price', '')
 
-    if image_response.status_code == 200:
-        image_data = image_response.json()
-        items = image_data.get('response', {}).get('body', {}).get('items', [])
-        if items:
-            images = items
+        context = {
+            'art_name': art_name,
+            'file_url': file_url,
+            'file_name': file_name,
+            'art_info': {
+                'artCd': artCd,
+            },
+            'art_dimensions': {
+                'art_width': art_width,
+                'art_vrticl': art_vrticl,
+            },
+            'price': price
+        }
+        print(f"데이터 전체 항목: {context}")  # 확인을 위한 출력
+        return render(request, 'detail.html', context)
 
-    # 상세 정보와 이미지를 렌더링
-    return render(request, 'detail.html', {'art_details': art_details, 'images': images})
+    except Exception as e:
+        print(f"상세 페이지 렌더링 오류: {e}")  # 에러 메시지 출력
+        return render(request, 'detail.html', {'error_message': '상세 페이지를 불러오는 중 오류가 발생했습니다.'})
+

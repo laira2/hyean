@@ -117,6 +117,7 @@ async def get_image_data(image_api_url, session):
                         file_name_prefix = file_name[:4]  # 파일 이름의 앞 4글자 추출
                         art_width = generate_dimension()  # 가로 크기 랜덤 생성
                         art_vrticl = generate_dimension()  # 세로 크기 랜덤 생성
+                        price = random.randint(100, 1000) * 10000
                         image_info_dict[file_name_prefix] = {  # 이미지 정보를 딕셔너리에 저장
                             'art_name': art_name,  # 작품명 저장
                             'file_name': file_name,  # 파일명 저장
@@ -124,12 +125,17 @@ async def get_image_data(image_api_url, session):
                             'art_width': art_width,  # 가로 길이 저장
                             'art_vrticl': art_vrticl,  # 세로 길이 저장
                             'artCd': artCd,  # 작품 일련번호 저장
-                            'categry': cached_data['art_info'].get(art_name, {}).get('categry', '')  # 카테고리 저장
+                            'categry': cached_data['art_info'].get(art_name, {}).get('categry', ''),  # 카테고리 저장
+                            'price': price
                         }
-
-    for image_info in image_info_dict.values():  # 이미지 정보 딕셔너리의 값을 반복하여 처리
-        price = random.randint(1000, 10000) * 10000  # 작품 가격을 랜덤 생성
-        image_info['price'] = price  # 가격 정보 저장
+                        cached_data['images'][artCd] = { # artCd를 키로 사용하여 이미지 정보를 캐싱
+                            'art_name': art_name,  # 작품명 저장
+                            'file_name': file_name,  # 파일명 저장
+                            'file_url': file_url,  # 파일 URL 저장
+                            'art_width': art_width,  # 가로 길이 저장
+                            'art_vrticl': art_vrticl,  # 세로 길이 저장
+                            'price': price,
+                        }
 
     return list(image_info_dict.values())  # 이미지 정보 딕셔너리의 값을 리스트로 반환하여 저장
 
@@ -191,11 +197,11 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                         if art_name and search_query in art_name:
                             price = random.randint(1000,10000) * 10000 # 랜덤 가격 생성
                             art_info = {
-                                'artCd' : item.get('artCd', ''),
+                                'artCd': item.get('artCd', ''),
                                 'art_name': art_name,
-                                'fileNm' : item.get('fileNm', ''),
+                                'fileNm': item.get('fileNm', ''),
                                 'image_url': item.get('fileUrl', ''),
-                                'price' : price #랜덤 가격 추가
+                                'price': price #랜덤 가격 추가
                             }
                             art_list.append(art_info)
                             seen_art_cds.add(art_cd) # 집합엥 추가하여 중복 체크

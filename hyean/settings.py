@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'shop',
     'user_account',
     'django_extensions',
     'openapi',
@@ -40,7 +39,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
-    'cart.apps.CartConfig',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -110,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -152,4 +150,3 @@ HAYSTACK_CONNECTIONS = {
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
-CART_SESSION_ID = 'cart'

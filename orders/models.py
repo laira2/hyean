@@ -1,27 +1,18 @@
+# models.py
 from django.db import models
-from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    username = models.CharField(max_length=100)
-    phone1 = models.CharField(max_length=4)
-    phone2 = models.CharField(max_length=4)
-    phone3 = models.CharField(max_length=4)
-    email_name = models.EmailField()
-    address = models.CharField(max_length=200)
-    payment_status = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Order {self.id}"
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    art_code = models.CharField(max_length=20)
-    art_name = models.CharField(max_length=100)
-    quantity = models.PositiveIntegerField()
+    artCd = models.CharField(max_length=50)
+    art_name = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image_url = models.URLField()
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    address = models.TextField()
+    order_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.art_name} - {self.quantity}"
+        return f"Order {self.id} for {self.art_name}"
+

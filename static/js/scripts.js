@@ -57,14 +57,12 @@ $(function(){
         speed : 700,
         autoplay : true,            // 자동 스크롤 사용 여부
         autoplaySpeed : 2000,         // 자동 스크롤 시 다음으로 넘어가는데 걸리는 시간 (ms)
-        pauseOnHover : true,        // 슬라이드 이동    시 마우스 호버하면 슬라이더 멈추게 설정
+        pauseOnHover : false,        // 슬라이드 이동    시 마우스 호버하면 슬라이더 멈추게 설정
         vertical : false,        // 세로 방향 슬라이드 옵션
         prevArrow : "<button type='button' class='slick-prev'>Previous</button>",        // 이전 화살표 모양 설정
         nextArrow : "<button type='button' class='slick-next'>Next</button>",        // 다음 화살표 모양 설정
         dotsClass : "slick-dots",     //아래 나오는 페이지네이션(점) css class 지정
         draggable : true,     //드래그 가능 여부
-
-
     });
   })
 
@@ -85,12 +83,71 @@ $(document).ready(function(){
     })
 })
 
-var count = 2;
-window.addEventListener('scroll', function() {
-    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        var toAdd = document.createElement("div");
-        toAdd.classList.add(".content_wrap")
-        toAdd.textContent = `${++count}번째 블록`;
-        document.querySelector('.content_container').appendChild(toAdd)
+// 무한 스크롤 테스트
+//$(document).ready(function() {
+//        var count = 1;
+//        var $contentWrap = $('.content_wrap');
+//        var $contentContainer = $('.content_container');
+//
+//        $(window).scroll(function() {
+//            if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+//                var $cloneContent = $contentWrap.clone();
+//                $cloneContent.find('strong').text(`${count++}번째 블록`);
+//                $contentContainer.append($cloneContent);
+//            }
+//        });
+//    });
+
+
+
+
+
+
+let page = 1;
+let isLoading = false;
+
+async function loadMore() {
+    if (isLoading) return;
+    isLoading = true;
+
+    try {
+        document.getElementById('load-more').style.display = 'block';
+
+        const response = await fetch(`infinite-view/`);
+        const data = await response.json();
+
+        const imageInfoList = data.image_info_list;
+        const ulElement = document.getElementById('art-list');
+
+        imageInfoList.forEach(imageInfo => {
+            const liElement = document.createElement('li');
+            liElement.innerHTML = `
+                <div class="img_wrap">
+                    <a href="/detail/${imageInfo.art_name}">
+                        <img src="${imageInfo.file_url}" alt="${imageInfo.art_name}" style="max-width: 300px; min-height: 350px;">
+                    </a>
+                    <div class="img_info">
+                        <p><strong>작품명 :</strong> ${imageInfo.art_name}</p>
+                        <p><strong>일련번호 :</strong> ${imageInfo.artCd}</p>
+                        <p><strong>작품가격 :</strong> ${imageInfo.price}</p>
+                    </div>
+                </div>
+            `;
+            ulElement.appendChild(liElement);
+        });
+
+        page++;
+        isLoading = false;
+        document.getElementById('load-more').style.display = 'none';
+    } catch (error) {
+        console.error('Error loading more data:', error);
+        isLoading = false;
+    }
+
+}
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 100) {
+        loadMore();
     }
 });

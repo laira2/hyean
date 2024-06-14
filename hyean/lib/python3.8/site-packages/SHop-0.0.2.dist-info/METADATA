@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: SHop
+Version: 0.0.2
+Summary: Paquete para simulacion hidrologica operacional
+Home-page: https://github.com/pypa/sampleproject
+Author: Soraya Castillo
+Author-email: socastillogi@unal.edu.co
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# SHop : Simulación Hidrológica operacional
+
+This is a simple example package.
+

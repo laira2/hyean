@@ -11,6 +11,9 @@
                     {% csrf_token %}
                     <div class="login_btn_box">
                         {% load socialaccount %}
+                        <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'kakao' %}'">
+                                kakao
+                        </button>
                         <button class="login_btn" type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
                                 네이버
                         </button>
@@ -19,10 +22,12 @@
                         </button>
                         <button class="login_btn" type="submit">로그인</button>
                     </div>
-                    <div>
-                         <button class="back_btn">돌아가기</button>
-                    <p style="font-size:15px">아직 회원이 아니신가요?</p>
-                    <a href="{% url 'signup' %}">회원 가입</a>
+                    <div class="login_to_signup_box">
+                        <p style="font-size:13px">
+                            아직 회원이 아니신가요?
+                            <button class="signup_btn"><a href="{% url 'signup' %}">회원 가입</a></button>
+                            <button class="back_btn">돌아가기</button>
+                        </p>
                     </div>
 
                 </div>

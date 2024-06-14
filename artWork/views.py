@@ -8,9 +8,12 @@ import aiohttp  #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 �
 from django.shortcuts import render  #장고에서 HTML 템프릿을 랜더링하기 위한 render함수 가져옴
 from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환하는데 사용
 from haystack.query import SearchQuerySet
+from django.http import JsonResponse
+
 
 # def index(request):
 #    return render(request, 'index.html')
+
 
 
 class OpenAPIView:
@@ -81,6 +84,7 @@ async def get_data(base_url, session):
                             'artCd': artCd, # 작품 일련번호 저장
                             'categry': categry # 작품 카테고리 저장
                         }
+
 
 async def get_image_data(image_api_url, session):
     """비동기적으로 이미지 데이터를 가져오고 캐싱"""
@@ -154,7 +158,7 @@ async def openapi_view(request):
 
     return render(request, 'index.html', {'image_info_list': image_info_list})  # 가져온 데이터
 
-async def search(request):
+async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
     image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
 
     search_query = request.GET.get('q', '')
@@ -177,11 +181,12 @@ async def search(request):
                 image_response = await fetch(session, full_image_url)
                 #print(f"API 응답: {image_response}")
 
-                if image_response and 'response' in image_response and 'body' in image_response['response'] and 'items' in image_response['response']['body']:
+                if image_response and 'response' in image_response and 'body' in image_response[
+                    'response'] and 'items' in image_response['response']['body']:
                     items = image_response['response']['body']['items']
                     if isinstance(items, dict):
                         items = [items]
-                    
+
                     seen_art_cds = set() # 이미 추가된 일련번호를 저장할 집합
 
                     for item in items:
@@ -206,4 +211,19 @@ async def search(request):
                 print(f"API 요청 실패: {e}")
 
     print(f"검색어: {search_query}, 검색결과 {art_list}")
-    return render(request, 'index.html', {'search_query': search_query, 'art_list': art_list})
+    return render(request, 'search.html', {'search_query': search_query, 'art_list': art_list})
+
+
+async def infiniteView(request):
+    """View 함수로, 비동기적으로 데이터를 가져오고 렌더링"""
+    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"  # 기본 URL 설정
+    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"  # 이미지 API URL 설정
+
+    async with aiohttp.ClientSession() as session:  # aiohttp의 ClientSession 객체를 사용하여 비동기적으로 세션 생성
+        await get_data(base_url, session)  # get_data 함수를 사용하여 작품 정보를 가져오며, 비동기적으로 실행
+        image_info_list = await get_image_data(image_api_url, session)  # 이미지 정보를 비동기적으로 가져옴
+
+    # 데이터를 정상적으로 불러오지 못한 경우, 빈 리스트 또는 오류 메시지 출력
+    if not image_info_list:  # 이미지 정보 리스트가 비어있는 경우
+        image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
+    return JsonResponse({'image_info_list': image_info_list})

@@ -12,7 +12,15 @@ ul {
 
 a {
     text-decoration: none;
+    color: black
 }
+
+p {
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 
 
 #container {
@@ -98,6 +106,44 @@ h2 a {
     color: black;
 }
 
+#user_status {
+    font-size: 13px;
+    text-align: right;
+}
+
+#user_status button{
+    width: 50px;
+    height: 25px;
+    border: 1px solid black;
+    font-size: 12px;
+    background-color: white;
+}
+
+#user_staus button:hover {
+    background-color: #00000040;
+}
+
+/*
+.account ul li:last-of-type {
+    font-size: 13px;
+    text-align: right;
+}
+
+.account ul li:last-of-type button {
+    width: 50px;
+    height: 25px;
+    border: 1px solid black;
+    font-size: 12px;
+    background-color: white;
+}
+
+
+.account ul li:last-of-type button:hover {
+    background-color: #00000040;
+}
+*/
+
+
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -147,6 +193,10 @@ section {
     width: 100%;
 }
 
+.section_wrap {
+    background-color: #00000050;
+}
+
 .slick_container {
     width: 900px;
     height: 550px;
@@ -180,13 +230,18 @@ section {
     height: 100%;
 }
 
-.content_container:nth-child(2n) {
-    background-color: #ff000020;
-}
-
 .content_wrap {
     width: 1000px;
     margin: auto;
+    padding-bottom: 60px;
+    text-align: center;
+}
+
+.content_wrap h2 {
+    font-size: 30px;
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .content_wrap ul {
@@ -194,6 +249,7 @@ section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin: 40px 0;
 }
 
 .content_wrap div {
@@ -214,8 +270,6 @@ section {
 .img_wrap:hover img {
     filter: brightness(50%); /* 호버 시 이미지 밝기를 50%로 낮춤 */
 }
-
-
 
 .img_info {
     display: none;
@@ -281,7 +335,6 @@ section {
 .login_container {
     width: 100%;
     height: 700px;
-    background-color: #ffff0020;
     padding-top: 150px;
     box-sizing: border-box;
 }
@@ -318,6 +371,7 @@ section {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    text-align: center;
 }
 
 .login_form {
@@ -325,6 +379,10 @@ section {
     position: absolute;
     right: 50%;
     transform: translateX(50%);
+}
+
+.login_form p:first-of-type label {
+    margin-right: 5px;
 }
 
 .login_wrap form input {
@@ -341,21 +399,71 @@ section {
     display: flex;
     justify-content: space-between;
 }
+
+.login_btn:nth-child(1) { /* 카카오톡 */
+    background-color: #FEE500;
+    color: black;
+}
+
+.login_btn:nth-child(2) { /* 네이버 */
+    background-color: #03C75A;
+}
+
+.login_btn:nth-child(3) { /* 구글 */
+    background-color: #fff;
+    border: 1px solid black;
+    color: black;
+}
+
+.login_btn:nth-child(4) {
+    background-color: #3333cc;
+}
+
 .login_btn,
 .back_btn {
     width: 95px;
     height: 25px;
     border-radius: 20px;
     margin-top: 10px;
+    border: 1px solid black;
 }
 
 .login_btn {
     background-color: #2FB20F;
+    border: 1px solid black;
     color: #fff;
 }
 
 .login_btn:hover {
     color: #358ce9;
+}
+
+.signup_btn {
+    width: 95px;
+    height: 25px;
+    border-radius: 20px;
+    margin-top: 10px;
+    border: 1px solid black;
+}
+.signup_btn:hover {
+    background-color: #3333cc;
+}
+.signup_btn a {
+    display: block;
+}
+.signup_btn a:hover {
+    color: #fff;
+}
+
+.login_to_signup_box {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
+
+.back_btn:hover {
+    background-color: #333333;
+    color: #fff;
 }
 
 /* signup.html (회원가입 페이지!!!!)================================================ */
@@ -395,6 +503,10 @@ section {
     border-radius: 10px;
     padding-left: 5px;
     box-sizing: border-box;
+}
+
+.signup_wrap form div {
+    margin-bottom: 25px;
 }
 
 .signup_id_box {
@@ -640,4 +752,237 @@ section {
     margin-bottom: 40px;
     text-align: center;
     font-weight: 700;
+}
+
+/* search html 영역================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*    ===============================loader==========================      */
+
+
+.loader {
+  --background: linear-gradient(135deg, #23C4F8, #275EFE);
+  --shadow: rgba(39, 94, 254, 0.28);
+  --text: #6C7486;
+  --page: rgba(255, 255, 255, 0.36);
+  --page-fold: rgba(255, 255, 255, 0.52);
+  --duration: 3s;
+  width: 200px;
+  height: 140px;
+  position: relative;
+}
+
+.loader:before, .loader:after {
+  --r: -6deg;
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  width: 120px;
+  top: 80%;
+  box-shadow: 0 16px 12px var(--shadow);
+  transform: rotate(var(--r));
+}
+
+.loader:before {
+  left: 4px;
+}
+
+.loader:after {
+  --r: 6deg;
+  right: 4px;
+}
+
+.loader div {
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  position: relative;
+  z-index: 1;
+  perspective: 600px;
+  box-shadow: 0 4px 6px var(--shadow);
+  background-image: var(--background);
+}
+
+.loader div ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+
+.loader div ul li {
+  --r: 180deg;
+  --o: 0;
+  --c: var(--page);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  transform-origin: 100% 50%;
+  color: var(--c);
+  opacity: var(--o);
+  transform: rotateY(var(--r));
+  -webkit-animation: var(--duration) ease infinite;
+  animation: var(--duration) ease infinite;
+}
+
+.loader div ul li:nth-child(2) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-2;
+  animation-name: page-2;
+}
+
+.loader div ul li:nth-child(3) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-3;
+  animation-name: page-3;
+}
+
+.loader div ul li:nth-child(4) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-4;
+  animation-name: page-4;
+}
+
+.loader div ul li:nth-child(5) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-5;
+  animation-name: page-5;
+}
+
+.loader div ul li svg {
+  width: 90px;
+  height: 120px;
+  display: block;
+}
+
+.loader div ul li:first-child {
+  --r: 0deg;
+  --o: 1;
+}
+
+.loader div ul li:last-child {
+  --o: 1;
+}
+
+.loader span {
+  display: block;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 20px;
+  text-align: center;
+  color: var(--text);
+}
+
+@keyframes page-2 {
+  0% {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  35%, 100% {
+    opacity: 0;
+  }
+
+  50%, 100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes page-3 {
+  15% {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  50%, 100% {
+    opacity: 0;
+  }
+
+  65%, 100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes page-4 {
+  30% {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  65%, 100% {
+    opacity: 0;
+  }
+
+  80%, 100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes page-5 {
+  45% {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  65% {
+    opacity: 1;
+  }
+
+  80%, 100% {
+    opacity: 0;
+  }
+
+  95%, 100% {
+    transform: rotateY(0deg);
+  }
 }

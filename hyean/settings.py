@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
+    'orders',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -108,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -135,6 +136,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 3
+LOGIN_URL ='/login/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/artWork/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'

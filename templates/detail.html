@@ -16,6 +16,15 @@
                 <p><strong>작품크기 :</strong> {{ art_dimensions.art_width }} x {{ art_dimensions.art_vrticl }}</p>
                 <p><strong>가격 :</strong> {{ price }}</p>
             </div>
+            <form method="post" action="{% url 'add_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="artCd" value="{{ art_info.artCd }}">
+                <input type="hidden" name="art_name" value="{{ art_name }}">
+                <input type="hidden" name="image_url" value="{{ file_url }}">
+                <input type="hidden" name="price" value="{{price}}">
+
+                <button type="submit">카트 담기</button>
+            </form>
             <a href="{% url 'detail' art_info.artCd %}">다른 작품 보기</a>
         {% endif %}
     </div>

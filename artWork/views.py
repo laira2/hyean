@@ -231,4 +231,5 @@ async def infiniteView(request):
     # 데이터를 정상적으로 불러오지 못한 경우, 빈 리스트 또는 오류 메시지 출력
     if not image_info_list:  # 이미지 정보 리스트가 비어있는 경우
         image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
+    print(f"데이터 다 잘 가지고 오니? : {image_info_list}")
     return JsonResponse({'image_info_list': image_info_list})

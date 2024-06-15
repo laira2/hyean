@@ -123,7 +123,7 @@ async function loadMore() {
             const liElement = document.createElement('li');
             liElement.innerHTML = `
                 <div class="img_wrap">
-                    <a href="/detail/${imageInfo.art_name}">
+                    <a href="/detail/${imageInfo.artCd}">
                         <img src="${imageInfo.file_url}" alt="${imageInfo.art_name}" style="max-width: 300px; min-height: 350px;">
                     </a>
                     <div class="img_info">

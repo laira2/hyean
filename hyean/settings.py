@@ -151,3 +151,5 @@ HAYSTACK_CONNECTIONS = {
 }
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
+CART_SESSION_ID = 'cart'

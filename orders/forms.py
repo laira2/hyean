@@ -1,23 +1,14 @@
-# forms.py
+# orders/forms.py
+
 from django import forms
 from .models import Order
 
 class OrderForm(forms.ModelForm):
-    artCd = forms.CharField(widget=forms.HiddenInput())  # 숨겨진 필드들
-    art_name = forms.CharField(widget=forms.HiddenInput())
-    file_name = forms.CharField(widget=forms.HiddenInput())
-    price = forms.DecimalField(widget=forms.HiddenInput())
-
-    username = forms.CharField(label='', max_length=100, widget=forms.TextInput(
-        attrs={'id': 'username', 'placeholder': '이름을 입력하세요.', 'required': True}))
-    phone1 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
-    phone2 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
-    phone3 = forms.CharField(label='', widget=forms.TextInput(attrs={'class': 'signup_phone', 'required': True}))
-    email_name = forms.CharField(label='', widget=forms.TextInput(
-        attrs={'class': 'signup_email', 'placeholder': '이메일을 입력해주세요', 'required': True}))
-    address = forms.CharField(label='', widget=forms.TextInput(
-        attrs={'id': 'address', 'placeholder': '주소를 입력해주세요', 'required': True}))
+    name = forms.CharField(label='이름', max_length=100, widget=forms.TextInput(attrs={'placeholder': '이름'}))
+    phone = forms.CharField(label='전화번호', max_length=20, widget=forms.TextInput(attrs={'placeholder': '전화번호'}))
+    email = forms.EmailField(label='이메일', max_length=100, widget=forms.EmailInput(attrs={'placeholder': '이메일'}))
+    address = forms.CharField(label='배송지 주소', max_length=255, widget=forms.TextInput(attrs={'placeholder': '배송지 주소'}))
 
     class Meta:
         model = Order
-        fields = ['artCd', 'art_name', 'file_name', 'price', 'username', 'phone', 'email', 'address']
+        fields = ['name', 'phone', 'email', 'address']

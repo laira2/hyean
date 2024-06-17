@@ -7,5 +7,3 @@ db.sqlite3
 
 # Ignore specific environment variable
 load_dotenv()
-IAMPORT_KEY
-IAMPORT_SECRET

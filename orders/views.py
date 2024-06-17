@@ -9,39 +9,15 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def order_page(request):
-<<<<<<< Updated upstream
-    cart = Cart(request)
 
-    if not cart.cart:
-        return redirect('cart:detail')
-
-    if request.method == 'POST':
-=======
     if request.method == 'POST':
         cart = get_object_or_404(Cart, user=request.user)
->>>>>>> Stashed changes
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
-<<<<<<< Updated upstream
             order.total_price = cart.get_total_price()
             order.save()
-
-            for item in cart:
-                OrderItem.objects.create(
-                    order=order,
-                    product_name=item['art_name'],
-                    quantity=item['quantity'],
-                    price=item['price']
-                )
-            cart.clear()
-            amount = order.total_price
-            return redirect('payments:checkout_view', order_id=order.id, amount=amount)
-    else:
-        form = OrderForm()
-    return render(request, 'order.html', {'cart': cart, 'form': form})
-=======
             cart_items = cart.cartaddeditem_set.all()
             for item in cart_items:
                 OrderItem.objects.create(order=order,
@@ -54,9 +30,7 @@ def order_page(request):
     else:
         form = OrderForm()
     return render(request, 'order.html', {'form': form})
->>>>>>> Stashed changes
-
-
+    
 # 개같이 멸망!
 def order_view(request):
     if request.method == 'POST':

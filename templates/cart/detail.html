@@ -2,16 +2,18 @@
 {% load static %}
 {% block content %}
 <h1>Your shopping cart</h1>
-<table class="cart">
-    <thead>
+<form method="post" action="{% url 'order_page' %}">
+    {% csrf_token %}
+    <table class="cart">
+        <thead>
         <tr>
             <th>Image</th>
             <th>Product</th>
             <th>Remove</th>
             <th>Price</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for item in cart %}
         <tr>
             <td>
@@ -33,6 +35,8 @@
             <td colspan="4"></td>
             <td class="num">${{ cart.get_total_price }}</td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+    <button type="submit">주문하기 Order</button>
+</form>
 {% endblock %}

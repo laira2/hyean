@@ -1,7 +1,7 @@
 # artWork/views.py
 import requests.exceptions
 import requests
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 import random  #난수 생성 함수 모듈
 import asyncio  #비동기 작업을 위한 asyncio 모듈
 import aiohttp  #비동기 HTTP 클라이언트 라이브러리인 aiohttp를 가져오며, 비동기적으로 HTTP 요청 및 응답을 받아올 수 있다.
@@ -10,9 +10,14 @@ from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환�
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
 
+from .models import Artwork
+
 
 # def index(request):
 #    return render(request, 'index.html')
+def detail_view(request, art_name):
+    artwork = get_object_or_404(Artwork, name=art_name)
+    return render(request, 'artWork/detail.html', {'artwork': artwork})
 
 
 

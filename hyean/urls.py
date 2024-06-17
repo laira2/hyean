@@ -34,4 +34,5 @@ urlpatterns = [
     path('account/', account_views.account, name="account"),
     path('delete/', account_views.delete_account, name ="delete_account"),
     path('update/', account_views.update_profile,name="update_profile"),
+    path('', include('payments.urls'), name='payments'),
 ]

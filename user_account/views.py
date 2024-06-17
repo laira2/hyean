@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 from .models import Profile
+import uuid
 
 @login_required
 def update_profile(request):
@@ -37,7 +38,7 @@ def user_login(request):
         if user is not None:    # user 검증 통과 했을 경우
             if user.is_active:  #user가 active=True인 경우
                 login(request,user) #login
-                return render(request, 'index.html',{'user':user})
+                return redirect('index')
             else:
                 message="사용할 수 없는 계정입니다."
                 return render(request,'login.html', {'login_form':login_form,'message':message})
@@ -55,6 +56,7 @@ def signup(request): #회원가입
         if signup_form.is_valid():
             new_user = signup_form.save(commit=False)
             new_user.set_password(signup_form.cleaned_data['password']) #set_password로 저장 전 해시 처리
+            new_user.uuid = uuid.uuid4()  # uuid4()를 사용해서 랜덤 uuid 생성
             new_user.save()
             phone_number = signup_form.cleaned_data['phone1'] + signup_form.cleaned_data['phone2'] + signup_form.cleaned_data['phone3']
             address = signup_form.cleaned_data['address']

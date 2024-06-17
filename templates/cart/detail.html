@@ -3,11 +3,17 @@
 {% block content %}
 
 <h1>Your shopping cart</h1>
+<<<<<<< Updated upstream
 
 {% if error %}
             <h1>{{ error }}</h1>
 {% endif %}
 
+=======
+{% if error_message %}
+            <h1>{{ error_message }}</h1>
+{%else %}
+>>>>>>> Stashed changes
     <table class="cart">
         <thead>
         <tr>
@@ -42,9 +48,9 @@
         </tr>
         </tbody>
     </table>
-<form method="post" action="{% url 'order_page' %}">
-    {% csrf_token %}
-    <button type="submit">주문하기 Order</button>
-</form>
-
+    <form method="post" action="{% url 'order_page' %}">
+        {% csrf_token %}
+        <button type="submit">주문하기 Order</button>
+    </form>
+{% endif %}
 {% endblock %}

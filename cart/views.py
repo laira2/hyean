@@ -5,13 +5,11 @@ from django.http import HttpResponseBadRequest
 from .models import Cart, CartAddedItem
 from orders.models import OrderItem
 
-
 @login_required
 @require_POST
 def add_cart(request):
     try:
         user = request.user
-
         # 사용자의 장바구니 가져오기 또는 생성하기
         cart, created = Cart.objects.get_or_create(user=user)
 
@@ -46,9 +44,14 @@ def add_cart(request):
 @login_required
 def cart_detail(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_items = cart.cartaddeditem_set.all()
-    total_price = sum(item.price for item in cart_items)
-    return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total_price':total_price})
+    if not cart:
+        cart_items = cart.cartaddeditem_set.all()
+        total_price = sum(item.price for item in cart_items)
+        return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total_price':total_price})
+    else:
+        error_message ="카트에 담긴 제품이 없습니다."
+        print(error_message)
+        return render(request, 'cart/detail.html', {'error_message':error_message})
 
 @require_POST
 def cart_remove(request):

@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 <h1>Your shopping cart</h1>
-<form method="post" action="{% url 'order_page' %}">
     {% csrf_token %}
     <table class="cart">
         <thead>
@@ -37,6 +36,8 @@
         </tr>
         </tbody>
     </table>
+<form method="post" action="{% url 'order_page' %}">
+    {% csrf_token %}
     <button type="submit">주문하기 Order</button>
 </form>
 {% endblock %}

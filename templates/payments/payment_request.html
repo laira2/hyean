@@ -1,50 +1,64 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Request</title>
-    <script src="https://cdn.jsdelivr.net/npm/@portone/browser-sdk@latest/dist/portone.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
 </head>
 <body>
+    <!-- 할인 쿠폰 -->
+    <div>
+        <input type="checkbox" id="coupon-box" />
+        <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
+    </div>
+    <!-- 결제 UI, 이용약관 UI 영역 -->
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <!-- 결제하기 버튼 -->
     <button id="payment-button">결제하기</button>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof PortOne !== 'undefined') {
-                const portone = new PortOne('YOUR_PORTONE_STORE_ID'); // 고객사 식별코드로 초기화
-                const orderId = 'YOUR_ORDER_ID'; // 주문 ID
+    const coupon = document.getElementById("coupon-box");
+    const button = document.getElementById("payment-button");
+    const amount = 50000;
 
-                const requestPayment = () => {
-                    portone.requestPayment({
-                        pg: 'tosspayments', // 토스페이먼트 선택
-                        payMethod: 'card', // 결제 수단
-                        merchantUid: orderId, // 상점에서 생성한 고유 주문번호
-                        amount: 10000, // 결제 금액
-                        name: '주문명',
-                        buyerName: '구매자명',
-                        buyerTel: '010-1234-5678',
-                        buyerEmail: 'buyer@example.com',
-                        // 기타 필요한 결제 정보
-                    }, (response) => {
-                        if (response.success) {
-                            // 결제 성공 처리
-                            console.log('결제 성공:', response);
-                            window.location.href = '/payment/success/';
-                        } else {
-                            // 결제 실패 처리
-                            console.log('결제 실패:', response);
-                            window.location.href = '/payment/fail/';
-                        }
-                    });
-                };
+    // 고객 키와 클라이언트 키를 템플릿 변수로부터 설정
+    const widgetClientKey = "{{ client_key }}";
+    const customerKey = "{{ customer_key }}";
+    const orderId = "{{ order_id }}";
+    const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
 
-                document.getElementById('payment-button').addEventListener('click', requestPayment);
-            } else {
-                console.error('PortOne is not defined');
-                alert('결제 모듈을 불러오는 데 실패했습니다. 페이지를 새로고침 하거나 나중에 다시 시도해 주세요.');
-                // 추가적인 Fallback 처리 코드
-            }
+    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        { variantKey: "DEFAULT" }
+    );
+
+    paymentWidget.renderAgreement(
+        "#agreement",
+        { variantKey: "AGREEMENT" }
+    );
+
+    coupon.addEventListener("change", function () {
+        if (coupon.checked) {
+            paymentMethodWidget.updateAmount(amount - 5000);
+        } else {
+            paymentMethodWidget.updateAmount(amount);
+        }
+    });
+
+    button.addEventListener("click", function () {
+        // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+        // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+        paymentWidget.requestPayment({
+            orderId: orderId,
+            orderName: "토스 티셔츠 외 2건",
+            successUrl: window.location.origin + "/payments/success",
+            failUrl: window.location.origin + "/payments/fail",
+            customerEmail: "customer123@gmail.com",
+            customerName: "김토스",
+            customerMobilePhone: "01012341234",
         });
+    });
     </script>
 </body>
 </html>

@@ -1,5 +1,3 @@
-# hyean settings.py
-
 import os
 import environ
 from pathlib import Path
@@ -23,18 +21,13 @@ config = Config(RepositoryEnv(env_path))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS 설정
-
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
-#ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,6 +50,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'orders',
     'cart',
+    'payments',  # 결제 관련 앱 추가
+    'haystack',  # haystack 앱 추가
 ]
 
 MIDDLEWARE = [
@@ -67,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -156,6 +151,11 @@ LOGIN_REDIRECT_URL = '/artWork/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
 ACCOUNT_LOGOUT_ON_GET = True
 
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
+
+CART_SESSION_ID = 'cart'
+
+# Haystack 설정
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
@@ -164,6 +164,6 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
-
-CART_SESSION_ID = 'cart'
+# Toss Payments 설정
+TOSS_PAYMENTS_CLIENT_KEY = os.getenv('TOSS_PAYMENTS_CLIENT_KEY')
+TOSS_PAYMENTS_SECRET_KEY = os.getenv('TOSS_PAYMENTS_SECRET_KEY')

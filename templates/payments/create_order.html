@@ -2,22 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제하기</title>
+    <script src="https://js.tosspayments.com/v1"></script>
 </head>
 <body>
-    <h1>주문 생성</h1>
-    <form method="post" action="{% url 'create_order' %}">
-        {% csrf_token %}
-        <label for="customer_name">고객 이름:</label>
-        <input type="text" id="customer_name" name="customer_name" required><br><br>
+    <button onclick="createOrder()">결제하기</button>
 
-        <label for="order_name">주문 명:</label>
-        <input type="text" id="order_name" name="order_name" required><br><br>
+    <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
-        <label for="amount">결제 금액:</label>
-        <input type="number" id="amount" name="amount" required><br><br>
+    function createOrder() {
+        const csrftoken = getCookie('csrftoken');
 
-        <button type="submit">주문 생성</button>
-    </form>
+        fetch('/payments/create-order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: 'amount=1000'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const orderId = data.order_id;
+            const customerKey = data.customer_key;
+
+            // Toss 결제창을 여는 코드
+            TossPayments.requestPayment('카드', {
+                orderId: orderId,
+                orderName: '토스 티셔츠 외 2건',
+                successUrl: window.location.origin + '/payments/success',
+                failUrl: window.location.origin + '/payments/fail',
+                customerEmail: 'customer123@gmail.com',
+                customerName: '김토스',
+                customerMobilePhone: '01012341234',
+            });
+        });
+    }
+    </script>
 </body>
 </html>

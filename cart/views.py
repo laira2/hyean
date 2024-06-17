@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from .models import Cart, CartAddedItem
+from orders.models import OrderItem
+
 
 @login_required
 @require_POST
@@ -18,15 +20,24 @@ def add_cart(request):
         image_url = request.POST.get('image_url')
         art_name = request.POST.get('art_name')
 
+        # OrderItem에 존재하는지 확인
+        if OrderItem.objects.filter(artCd=artCd).exists():
+            return redirect('index')
+
+        # CartAddedItem에 존재하는지 확인
+        if CartAddedItem.objects.filter(cart=cart, artCd=artCd).exists():
+            return redirect('cart_detail')
+
         # 장바구니에 항목 추가
         added_item = CartAddedItem.objects.create(
-            cart=cart,
-            artCd=artCd,
-            art_name=art_name,
-            price=price,
-            image_url=image_url
-        )
+                cart=cart,
+                artCd=artCd,
+                art_name=art_name,
+                price=price,
+                image_url=image_url
+            )
         return redirect('cart_detail')
+
 
     except Exception as e:
         print(f"카트 담기 오류: {e}")
@@ -34,14 +45,15 @@ def add_cart(request):
         return HttpResponseBadRequest('카트 담기 중 오류가 발생했습니다.')
 @login_required
 def cart_detail(request):
-    user = request.user
-    cart =Cart.objects.get(user=user)
+    cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = cart.cartaddeditem_set.all()
-    return render(request, 'cart/detail.html', {'cart_items': cart_items})
+    total_price = sum(item.price for item in cart_items)
+    return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total_price':total_price})
 
 @require_POST
 def cart_remove(request):
+    cart= get_object_or_404(Cart, user=request.user)
     artCd = request.POST.get('artCd')
-    cart_item = CartAddedItem.objects.filter(artCd=artCd)
+    cart_item = CartAddedItem.objects.filter(cart=cart,artCd=artCd)
     cart_item.delete()
     return redirect('cart_detail')

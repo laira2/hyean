@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 
 from . import cart
 from .cart import Cart
+from .models import CartAddedItem
 
 
 # Create your views here.
@@ -12,14 +13,22 @@ from .cart import Cart
 @require_POST
 def add_cart(request):
     try:
+        user = request.user
+
+        cart, created = Cart.objects.get_or_create(user=user)
+
         artCd = request.POST.get('artCd')
         price=request.POST.get('price')
         image_url=request.POST.get('image_url')
         art_name = request.POST.get('art_name')
 
-        cart = Cart(request)
-        cart.add(artCd, price, image_url, art_name)
-        return redirect('cart_detail')
+        added_item = CartAddedItem.objects.create(
+            cart=cart,
+            artCd=artCd,
+            art_name=art_name,
+            price=price,
+            image_url=image_url
+        )
 
     except Exception as e:
         print(f"카트 담기 오류: {e}")

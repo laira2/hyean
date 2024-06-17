@@ -37,7 +37,7 @@ def user_login(request):
         if user is not None:    # user 검증 통과 했을 경우
             if user.is_active:  #user가 active=True인 경우
                 login(request,user) #login
-                return render(request, 'index.html',{'user':user})
+                return redirect('index')
             else:
                 message="사용할 수 없는 계정입니다."
                 return render(request,'login.html', {'login_form':login_form,'message':message})

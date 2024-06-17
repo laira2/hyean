@@ -6,8 +6,7 @@
 {% if error %}
             <h1>{{ error }}</h1>
 {% endif %}
-<form method="post" action="{% url 'order_page' %}">
-    {% csrf_token %}
+
     <table class="cart">
         <thead>
         <tr>
@@ -26,9 +25,10 @@
             <td>{{ item.art_name }}</td>
             <td>
                 <form action="{% url 'cart_remove'%}" method="post">
+                    {% csrf_token %}
                     <input type="hidden" name="artCd" value="{{ item.artCd }}">
                     <input type="submit" value="Remove">
-                    {% csrf_token %}
+
                 </form>
             </td>
             <td class="num">${{ item.price }}</td>
@@ -41,6 +41,8 @@
         </tr>
         </tbody>
     </table>
+<form method="post" action="{% url 'order_page' %}">
+    {% csrf_token %}
     <button type="submit">주문하기 Order</button>
 </form>
 

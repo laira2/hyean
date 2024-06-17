@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
-    'payments',
-    'social_django',
+    'orders',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +68,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'hyean.urls'
@@ -124,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -151,6 +150,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 3
+LOGIN_URL ='/login/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/artWork/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
@@ -165,24 +165,3 @@ HAYSTACK_CONNECTIONS = {
 }
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
-
-# .env 파일에서 IAMPORT_API_KEY와 IAMPORT_API_SECRET 가져오기
-PORTONE_API_KEY = config('PORTONE_API_KEY', default='')
-PORTONE_API_SECRET = config('PORTONE_API_SECRET', default='')
-
-# .env 파일에서 API 키 불러오기
-TOSS_PAYMENTS_SECRET_KEY = os.getenv('TOSS_PAYMENTS_SECRET_KEY')
-
-if not TOSS_PAYMENTS_SECRET_KEY:
-    raise ValueError("TOSS_PAYMENTS_SECRET_KEY가 설정되지 않았습니다.")
-
-LANGUAGE_CODE = 'ko-kr'
-TIME_ZONE = 'Asia/Seoul'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-PORTONE_STORE_ID = config('PORTONE_STORE_ID')
-PORTONE_API_KEY = config('PORTONE_API_KEY')
-PORTONE_API_SECRET = config('PORTONE_API_SECRET')
-

@@ -11,13 +11,15 @@
                     {% for art in art_list %}
                     <li>
                         <div class="img_wrap">
+                            <a href="{% url 'detail' art.artCd %}">
                             <p>
-                                {% if art.image_url %}
-                                <img src="{{ art.image_url }}" alt="작품 이미지" style="max-width: 300px; min-height: 350px">
+                                {% if art.file_url %}
+                                <img src="{{ art.file_url }}" alt="작품 이미지" style="max-width: 300px; min-height: 350px">
                                 {% else %}
                                 이미지 없음
                                 {% endif %}
                             </p>
+                            </a>
                             <div class="img_info">
                                 <p><strong>일련번호 :</strong>{{ art.artCd }}</p>
                                 <p><strong>작품명 :</strong>{{ art.art_name }}</p>

@@ -181,9 +181,9 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                     "returnType": "json",
                     "artNm": search_query
                 }
-                full_image_url = image_api_url + '?' + urlencode(image_params)
-                #print(f"요청 URL: {full_image_url}")
-                image_response = await fetch(session, full_image_url)
+                full_file_url = image_api_url + '?' + urlencode(image_params)
+                #print(f"요청 URL: {full_file_url}")
+                image_response = await fetch(session, full_file_url)
                 #print(f"API 응답: {image_response}")
 
                 if image_response and 'response' in image_response and 'body' in image_response[
@@ -201,12 +201,16 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
                             continue
                         if art_name and search_query in art_name:
                             price = random.randint(1000,10000) * 10000 # 랜덤 가격 생성
+                            art_width = generate_dimension()
+                            art_vrticl = generate_dimension()
                             art_info = {
                                 'artCd': item.get('artCd', ''),
                                 'art_name': art_name,
-                                'fileNm': item.get('fileNm', ''),
-                                'image_url': item.get('fileUrl', ''),
-                                'price': price #랜덤 가격 추가
+                                'file_name': item.get('fileNm', ''),
+                                'file_url': item.get('fileUrl', ''),
+                                'art_width': art_width,
+                                'art_vrticl': art_vrticl,
+                                'price': price,  # 랜덤 가격 추가
                             }
                             art_list.append(art_info)
                             seen_art_cds.add(art_cd) # 집합엥 추가하여 중복 체크
@@ -215,6 +219,7 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
             except Exception as e:
                 print(f"API 요청 실패: {e}")
 
+    request.session['art_list'] = art_list # 세션에 art_list 저장
     print(f"검색어: {search_query}, 검색결과 {art_list}")
     return render(request, 'search.html', {'search_query': search_query, 'art_list': art_list})
 
@@ -231,4 +236,5 @@ async def infiniteView(request):
     # 데이터를 정상적으로 불러오지 못한 경우, 빈 리스트 또는 오류 메시지 출력
     if not image_info_list:  # 이미지 정보 리스트가 비어있는 경우
         image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
+    print(f"데이터 다 잘 가지고 오니? : {image_info_list}")
     return JsonResponse({'image_info_list': image_info_list})

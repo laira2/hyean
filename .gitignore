@@ -3,3 +3,9 @@ cert.crt
 __pycache__
 *.pyc
 db.sqlite3
+.env
+
+# Ignore specific environment variable
+load_dotenv()
+IAMPORT_KEY
+IAMPORT_SECRET

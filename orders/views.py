@@ -23,6 +23,7 @@ def order_page(request):
 
         cart.clear()
         order.save()
+
     return render(request, 'order.html', {'cart': cart, 'form': form})
 
 

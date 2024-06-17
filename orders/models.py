@@ -7,6 +7,8 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.username}"
 
 class OrderItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -17,4 +19,4 @@ class OrderItem(models.Model):
     image_url = models.URLField()
 
     def __str__(self):
-        return f"주문 #{self.id} - {self.art_name}"
+        return f"OrderItem #{self.id} for Order #{self.order.id}"

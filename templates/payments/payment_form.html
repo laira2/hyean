@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Request</title>
+</head>
+<body>
+    <h1>결제 요청</h1>
+    <form method="post" action="{% url 'payment_request' %}">
+        {% csrf_token %}
+        <label for="amount">결제 금액:</label>
+        <input type="text" id="amount" name="amount" required><br><br>
+
+        <label for="order_id">주문 ID:</label>
+        <input type="text" id="order_id" name="order_id" required><br><br>
+
+        <label for="payment_method">결제 방법:</label>
+        <input type="text" id="payment_method" name="payment_method" required><br><br>
+
+        <button type="submit">결제하기</button>
+    </form>
+</body>
+</html>

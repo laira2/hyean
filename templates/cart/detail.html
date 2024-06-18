@@ -2,18 +2,11 @@
 {% load static %}
 {% block content %}
 
-<h1>Your shopping cart</h1>
-<<<<<<< Updated upstream
+<h1>나의 카트</h1>
 
-{% if error %}
-            <h1>{{ error }}</h1>
-{% endif %}
-
-=======
 {% if error_message %}
-            <h1>{{ error_message }}</h1>
+    <h1>{{ error_message }}</h1>
 {%else %}
->>>>>>> Stashed changes
     <table class="cart">
         <thead>
         <tr>

@@ -1,35 +1,57 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<h1>주문 정보 입력</h1>
-<form method="post" action="{% url 'payments:checkout' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <h2>장바구니 order</h2>
-    <table class="cart">
-        <thead>
-        <tr>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Price</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in cart_items %}
-        <tr>
-            <td>
-                <img src="{{ item.image_url }}" alt="{{ item.art_name }}" style="max-width: 100px;">
-            </td>
-            <td>{{ item.art_name }}</td>
-            <td class="num">${{ item.price }}</td>
-        </tr>
-        {% endfor %}
-        <tr class="total">
-            <td>Total</td>
-            <td colspan="2" class="num">${{ cart.get_total_price }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <button type="submit">결제하기</button>
-</form>
+
+<div class="container">
+        <h1>주문 정보 입력</h1>
+        <hr>
+    <form method="post" action="{% url 'payments:checkout' %}" id="order_form">
+        {% csrf_token %}
+        <div class="mb-2">
+            <label class="form-label">이름</label>
+            {{order_form.name}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">전화번호</label>
+            {{order_form.phone}}
+        </div>
+        <div class="form-floating mb-3">
+            <label class="form-label">이메일 주소</label>
+            {{order_form.email}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">배송지 주소</label>
+            {{order_form.address}}
+        </div>
+
+
+        <h2>장바구니 order</h2>
+        <table class="cart">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                    <img src="{{ item.image_url }}" alt="{{ item.art_name }}" style="max-width: 100px;">
+                </td>
+                <td>{{ item.art_name }}</td>
+                <td class="num">${{ item.price }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="2" class="num">${{ total_price }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="submit">결제하기</button>
+    </form>
+    </div>
 {% endblock %}

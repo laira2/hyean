@@ -22,8 +22,12 @@
                 <input type="hidden" name="art_name" value="{{ art_name }}">
                 <input type="hidden" name="image_url" value="{{ file_url }}">
                 <input type="hidden" name="price" value="{{price}}">
+                {% if not added %}
 
                 <button type="submit">카트 담기</button>
+                {% else %}
+                <p>이미 장바구니에 담긴 작품입니다.</p>
+                {% endif %}
             </form>
             <a href="{% url 'detail' art_info.artCd %}">다른 작품 보기</a>
         {% endif %}

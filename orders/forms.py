@@ -2,7 +2,6 @@
 
 from django import forms
 from .models import Order
-
 class OrderForm(forms.ModelForm):
 
     artCd = forms.CharField(widget=forms.HiddenInput)

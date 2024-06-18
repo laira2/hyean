@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+</head>
+<body>
+    <!-- 할인 쿠폰 -->
+    <div>
+        <input type="checkbox" id="coupon-box" />
+        <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
+    </div>
+    <!-- 결제 UI, 이용약관 UI 영역 -->
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <!-- 결제하기 버튼 -->
+    <button id="payment-button">결제하기</button>
+
+    <script>
+    console.log("Client Key:", "{{ client_key }}");
+    console.log("Customer Key:", "{{ customer_key }}");
+    console.log("Order ID:", "{{ order_id }}");
+
+    const coupon = document.getElementById("coupon-box");
+    const button = document.getElementById("payment-button");
+    const amount = 50000;
+
+    const widgetClientKey = "{{ client_key }}";
+    const customerKey = "{{ customer_key }}";
+    const orderId = "{{ order_id }}";
+    const paymentWidget = PaymentWidget(widgetClientKey, customerKey);
+
+    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+        "#payment-method",
+        { value: amount },
+        { variantKey: "DEFAULT" }
+    );
+
+    paymentWidget.renderAgreement(
+        "#agreement",
+        { variantKey: "AGREEMENT" }
+    );
+
+    coupon.addEventListener("change", function () {
+        if (coupon.checked) {
+            paymentMethodWidget.updateAmount(amount - 5000);
+        } else {
+            paymentMethodWidget.updateAmount(amount);
+        }
+    });
+
+    button.addEventListener("click", function () {
+        paymentWidget.requestPayment({
+            orderId: orderId,
+            orderName: "토스 티셔츠 외 2건",
+            successUrl: window.location.origin + "/payments/success",
+            failUrl: window.location.origin + "/payments/fail",
+            customerEmail: "customer123@gmail.com",
+            customerName: "김토스",
+            customerMobilePhone: "01012341234",
+        });
+    });
+    </script>
+</body>
+</html>

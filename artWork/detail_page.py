@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .views import cached_data  # artWork/views.py 캐시 데이터 사용
+from cart.models import Cart
+
 
 async def images(request, artCd):
     """캐시된 이미지 데이터 가져오기"""
@@ -58,8 +60,11 @@ async def detail_view(request, artCd):
                 'art_width': art_width,
                 'art_vrticl': art_vrticl,
             },
-            'price': price
+            'price': price,
+
         }
+
+
         print(f"잘 가져왔니? {context}")
         return render(request, 'detail.html', context)
 

@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+
 <h1>Your shopping cart</h1>
-<form method="post" action="{% url 'order_page' %}">
-    {% csrf_token %}
+<<<<<<< Updated upstream
+
+{% if error %}
+            <h1>{{ error }}</h1>
+{% endif %}
+
+=======
+{% if error_message %}
+            <h1>{{ error_message }}</h1>
+{%else %}
+>>>>>>> Stashed changes
     <table class="cart">
         <thead>
         <tr>
@@ -14,7 +24,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for item in cart %}
+        {% for item in cart_items %}
         <tr>
             <td>
                 <img src="{{ item.image_url }}" alt="{{ art_name }}" style="max-width: 500px;">
@@ -22,9 +32,10 @@
             <td>{{ item.art_name }}</td>
             <td>
                 <form action="{% url 'cart_remove'%}" method="post">
+                    {% csrf_token %}
                     <input type="hidden" name="artCd" value="{{ item.artCd }}">
                     <input type="submit" value="Remove">
-                    {% csrf_token %}
+
                 </form>
             </td>
             <td class="num">${{ item.price }}</td>
@@ -33,10 +44,13 @@
         <tr class="total">
             <td>Total</td>
             <td colspan="4"></td>
-            <td class="num">${{ cart.get_total_price }}</td>
+            <td class="num">${{ total_price }}</td>
         </tr>
         </tbody>
     </table>
-    <button type="submit">주문하기 Order</button>
-</form>
+    <form method="post" action="{% url 'order_page' %}">
+        {% csrf_token %}
+        <button type="submit">주문하기 Order</button>
+    </form>
+{% endif %}
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 class Order(models.Model):
+    user= models.OneToOneField(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     email = models.EmailField()
@@ -12,7 +13,6 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     artCd = models.CharField(max_length=100)
     art_name = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)

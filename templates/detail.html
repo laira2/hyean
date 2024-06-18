@@ -6,7 +6,7 @@
             <h1>{{ error_message }}</h1>
         {% else %}
             <h1>{{ art_name }}</h1>
-            <div class="detail_image">
+            <div class="shadow p-3 mb-5 bg-body-tertiary rounded detail_image ">
                 <img src="{{ file_url }}" alt="{{ art_name }}" style="max-width: 500px;">
             </div>
             <div class="detail_info">
@@ -24,7 +24,7 @@
                 <input type="hidden" name="price" value="{{price}}">
                 {% if not added %}
 
-                <button type="submit">카트 담기</button>
+                <button type="submit" class="btn btn-primary">카트 담기</button>
                 {% else %}
                 <p>이미 장바구니에 담긴 작품입니다.</p>
                 {% endif %}

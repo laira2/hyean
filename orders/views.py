@@ -29,4 +29,5 @@ def order_page(request):
     else:
         form = OrderForm()
     return render(request, 'order.html', {'order_form': form,'cart_items':cart_items,'total_price':total_price})
-
+    
+# 개같이 멸망!

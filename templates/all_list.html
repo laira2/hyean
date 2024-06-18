@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="content_container">
+    <div class="content_wrap">
+        <ul id="art-list">
+            {% for image_info in image_info_list %}
+            <li>
+                <div class="img_wrap">
+                    <!-- 이미지를 클릭하면 상세 페이지로 이동하도록 설정 -->
+                    <a href="{% url 'detail' image_info.artCd %}">
+                        <img src="{{ image_info.file_url }}" alt="{{ image_info.art_name }}" style="max-width: 300px; min-height: 350px">
+                    </a>
+                    <div class="img_info">
+                        <!-- 이미지의 상세 정보 표시 -->
+                        <p><strong>작품명 :</strong>{{ image_info.art_name }}</p>
+                        <p><strong>일련번호 :</strong>{{ image_info.artCd }}</p>
+                        <p><strong>작품가격 :</strong>{{ image_info.price }}</p>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

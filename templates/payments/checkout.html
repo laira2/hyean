@@ -5,20 +5,9 @@
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
 </head>
 <body>
-<!--&lt;!&ndash; 할인 쿠폰 &ndash;&gt;-->
-<!--<div>-->
-<!--    <input type="checkbox" id="coupon-box" />-->
-<!--    <label for="coupon-box"> 5,000원 쿠폰 적용 </label>-->
-<!--</div>-->
-<!-- 결제 UI, 이용약관 UI 영역 -->
 <div id="payment-method"></div>
 <div id="agreement"></div>
-<!-- 결제하기 버튼 -->
-<div style="
-    /*border: 1px solid red;*/
-    text-align: center;
-    width: 100%;
-">
+<div style="text-align: center; width: 100%;">
     <button id="payment-button" style="
         background-color: #007BFF;
         color: white;
@@ -29,50 +18,23 @@
         border-radius: 5px;
         cursor: pointer;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s, box-shadow 0.3s;
-    ">
+        transition: background-color 0.3s, box-shadow 0.3s;">
         결제하기
     </button>
 </div>
 
-
 <script>
     var tossPaymentsClientKey = "{{ toss_payments_client_key }}";
-    console.log(tossPaymentsClientKey);
-
-    const coupon = document.getElementById("coupon-box");
     const button = document.getElementById("payment-button");
     const amount = 1000;
-
-    // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
-    // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
     const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
     const customerKey = "111111111111111111111111111";
-    const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
-    // const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
+    const paymentWidget = PaymentWidget(widgetClientKey, customerKey);
 
-    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
-      "#payment-method",
-      { value: amount },
-      { variantKey: "DEFAULT" }
-    );
-
-    paymentWidget.renderAgreement(
-      "#agreement",
-      { variantKey: "AGREEMENT" }
-    );
-
-    // coupon.addEventListener("change", function () {
-    //     if (coupon.checked) {
-    //         paymentMethodWidget.updateAmount(amount - 5000);
-    //     } else {
-    //         paymentMethodWidget.updateAmount(amount);
-    //     }
-    // });
+    paymentWidget.renderPaymentMethods("#payment-method", { value: amount });
+    paymentWidget.renderAgreement("#agreement");
 
     button.addEventListener("click", function () {
-        // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-        // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
         paymentWidget.requestPayment({
             orderId: "1111111111111111111111111111111111",
             orderName: "너의 눈, 코, 입",
@@ -86,6 +48,3 @@
 </script>
 </body>
 </html>
-
-
-

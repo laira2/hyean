@@ -44,14 +44,13 @@ def add_cart(request):
 @login_required
 def cart_detail(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
-    print(cart)
-    cart_items = cart.cartaddeditem_set.all()
-    if cart_items:
-        print(cart_items)
+    if not cart:
+        cart_items = cart.cartaddeditem_set.all()
         total_price = sum(item.price for item in cart_items)
         return render(request, 'cart/detail.html', {'cart_items': cart_items, 'total_price':total_price})
     else:
         error_message ="카트에 담긴 제품이 없습니다."
+        print(error_message)
         return render(request, 'cart/detail.html', {'error_message':error_message})
 
 @require_POST

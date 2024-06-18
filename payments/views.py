@@ -1,5 +1,16 @@
+import os
+
 from django.shortcuts import render
 import requests, json, base64
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def my_view(request):
+    context = {
+        'toss_payments_client_key': os.getenv('TOSS_PAYMENTS_CLIENT_KEY')
+    }
+    return render(request, 'checkout.html', context)
 
 
 def checkout_view(request):
@@ -22,15 +33,16 @@ def success(request):
       개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
       @docs https://docs.tosspayments.com/reference/using-api/api-keys
     """
-    secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"
+    secretKey = os.getenv('TOSS_PAYMENTS_SECRET_KEY')
+    userpass = f"{secretKey}:"
+    encoded_u = base64.b64encode(userpass.encode()).decode()
+
 
     """
       토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
       비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
       @docs https://docs.tosspayments.com/reference/using-api/authorization#basic-인증-방식이란
     """
-    userpass = secretKey + ':'
-    encoded_u = base64.b64encode(userpass.encode()).decode()
 
     headers = {
         "Authorization": "Basic %s" % encoded_u,
@@ -52,33 +64,33 @@ def success(request):
     resjson = res.json()
     pretty = json.dumps(resjson, indent=4)
 
-    if res.status_code == 200:
-        respaymentKey = resjson["paymentKey"]
-        resorderId = resjson["orderId"]
-        restotalAmount = resjson["totalAmount"]
-
-        return render(
-            request,
-            "payments/payment_success.html",
-            {
-                "res": pretty,
-                "respaymentKey": respaymentKey,
-                "resorderId": resorderId,
-                "restotalAmount": restotalAmount,
-            }
-        )
-    else:
-        rescode = resjson["code"]
-        resmessage = resjson["message"]
-        return render(
-            request,
-            "payments/payment_fail.html",
-            {
-                "code": rescode,
-                "message": resmessage
-            }
-        )
-
+    # if res.status_code == 200:
+    #     respaymentKey = resjson["paymentKey"]
+    #     resorderId = resjson["orderId"]
+    #     restotalAmount = resjson["totalAmount"]
+    #
+    #     return render(
+    #         request,
+    #         "payments/payment_success.html",
+    #         {
+    #             "res": pretty,
+    #             "respaymentKey": respaymentKey,
+    #             "resorderId": resorderId,
+    #             "restotalAmount": restotalAmount,
+    #         }
+    #     )
+    # else:
+    #     rescode = resjson["code"]
+    #     resmessage = resjson["message"]
+    #     return render(
+    #         request,
+    #         "payments/payment_fail.html",
+    #         {
+    #             "code": rescode,
+    #             "message": resmessage
+    #         }
+    #     )
+    return render(request, "payments/payment_success.html")
 
 def fail(request):
     code = request.GET.get('code')

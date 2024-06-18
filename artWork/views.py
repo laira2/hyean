@@ -47,13 +47,13 @@ async def fetch(session, url, cache_key=None):
         print(f"HTTP 요청 오류: {e}")  # 오류 메시지 출력
         return None  # None 반환
 
-async def get_data(base_url, session):
+async def get_data(base_url, session, page_start=0, page_end=5):
     """비동기적으로 기본 데이터를 가져오고 캐싱"""
     tasks = []  # 비동기 작업들을 저장할 빈 리스트 생성
-    for page_number in range(0, 5):  # 0부터 4까지의 페이지에 대해 반복
+    for page_no in range(page_start, page_end):  # 0부터 4까지의 페이지에 대해 반복
         params = {  # API 요청을 위한 파라미터 설정
             "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
-            "pageNo": str(page_number),
+            "pageNo": page_no,
             "numOfRows": "10",
             "returnType": "json",
             "engNlty": "Republic of Korea"
@@ -233,3 +233,22 @@ async def infiniteView(request):
         image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
     print(f"데이터 다 잘 가지고 오니? : {image_info_list}")
     return JsonResponse({'image_info_list': image_info_list})
+
+async def all_list_artworks(request):
+    """작품을 전체 조회하는 뷰 함수"""
+    base_url = "http://apis.data.go.kr/5710000/benlService/nltyArtList"
+    image_api_url = "http://apis.data.go.kr/5710000/benlService/artImgList"
+
+    # 페이지 범위 설정
+    page_start = int(request.GET.get('page_start', 0))
+    page_end = int(request.GET.get('page_end', 200))
+
+    async with aiohttp.ClientSession() as session:
+        await get_data(base_url, session, page_start, page_end)
+        image_info_list = await get_image_data(image_api_url, session)
+
+    if not image_info_list:
+        image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]
+
+    print(f" 전체리스트 : {image_info_list}")
+    return render(request, 'all_list.html', {'image_info_list': image_info_list})

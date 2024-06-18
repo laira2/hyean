@@ -18,5 +18,6 @@ urlpatterns = [
     path('add/',add_cart,name ="add_cart"),
     path('cart/detail/',cart_detail, name="cart_detail" ),
     path('cart/remove/', cart_remove, name="cart_remove"),
+    path('all-list/', views.all_list_artworks, name='all_list_artworks'),
 
 ]

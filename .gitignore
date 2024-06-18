@@ -1,6 +1,7 @@
 cert.key
 cert.crt
 __pycache__
+__pycache__/
 *.pyc
 db.sqlite3
 .env

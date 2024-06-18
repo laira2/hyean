@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
@@ -21,8 +24,7 @@
     <link
             href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
             rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    />   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
     <link
@@ -113,7 +115,7 @@
     {% block content %}
     {% endblock %}
 
-    <footer>
+    <footer>        
         <div class="footer_wrap">
             <div class="SNS">
                 <ul>

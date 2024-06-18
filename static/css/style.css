@@ -779,10 +779,30 @@ section {
 
 
 
+/* detail.html ================         */
+.detail_container {
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
 
+.detail_image {
+    max-width: 500px;
+    margin-right: 100px; /* 이미지와 정보 사이의 간격 */
+}
 
+.detail_info {
+    max-width: 500px;
+}
 
+.img-shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 3);
+    border-radius: 1rem; /* 원한다면 테두리를 둥글게 */
+}
 
+.detail_info form {
+    margin-top: 20px; /* 폼과 작품 정보 사이의 간격 */
+}
 
 
 

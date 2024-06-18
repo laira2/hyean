@@ -3,47 +3,46 @@
 {% block content %}
 
 <h1>나의 카트</h1>
-
 {% if error_message %}
     <h1>{{ error_message }}</h1>
 {%else %}
-    <table class="cart">
+    <table class="table">
         <thead>
-        <tr>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Remove</th>
-            <th>Price</th>
-        </tr>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">작품명</th>
+              <th scope="col">삭제</th>
+              <th scope="col">가격</th>
+            </tr>
         </thead>
-        <tbody>
+      <tbody>
         {% for item in cart_items %}
         <tr>
             <td>
-                <img src="{{ item.image_url }}" alt="{{ art_name }}" style="max-width: 500px;">
+                <img src="{{ item.image_url }}" alt="{{ art_name }}" style="max-width: 150px;">
             </td>
-            <td>{{ item.art_name }}</td>
-            <td>
+            <td class="align-middle">{{ item.art_name }}</td>
+            <td class="align-middle">
                 <form action="{% url 'cart_remove'%}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="artCd" value="{{ item.artCd }}">
-                    <input type="submit" value="Remove">
+                    <input type="submit" class="btn btn-outline-secondary" value="삭제">
 
                 </form>
             </td>
-            <td class="num">${{ item.price }}</td>
+            <td class="num align-middle">${{ item.price }}</td>
         </tr>
         {% endfor %}
-        <tr class="total">
-            <td>Total</td>
-            <td colspan="4"></td>
-            <td class="num">${{ total_price }}</td>
-        </tr>
-        </tbody>
+          <tr class="table-active">
+                <td>합계</td>
+                <td colspan="2"></td>
+                <td class="num">${{ total_price }}</td>
+            </tr>
+      </tbody>
     </table>
     <form method="post" action="{% url 'order_page' %}">
         {% csrf_token %}
-        <button type="submit">주문하기 Order</button>
+        <button class="btn btn-primary" type="submit">주문하기</button>
     </form>
 {% endif %}
 {% endblock %}

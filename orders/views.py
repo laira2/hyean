@@ -3,40 +3,34 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseBadRequest
 from .forms import OrderForm
 from .models import Order, OrderItem
-from cart.cart import Cart
+from cart.models import Cart
 from django.contrib.auth.decorators import login_required
 
 
 @login_required
 def order_page(request):
-    cart = Cart(request)
-
-    if not cart.cart:
-        return redirect('cart:detail')
 
     if request.method == 'POST':
+        cart = get_object_or_404(Cart, user=request.user)
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
             order.total_price = cart.get_total_price()
             order.save()
-
-            for item in cart:
-                OrderItem.objects.create(
-                    order=order,
-                    product_name=item['art_name'],
-                    quantity=item['quantity'],
-                    price=item['price']
-                )
-            cart.clear()
-            amount = order.total_price
-            return redirect('payments:checkout_view', order_id=order.id, amount=amount)
+            cart_items = cart.cartaddeditem_set.all()
+            for item in cart_items:
+                OrderItem.objects.create(order=order,
+                                         artCd=item['artCd'],
+                                         art_name=item['art_name'],
+                                         price=item['price'],
+                                         image_url=item['image_url'])
+            order.save()
+            return render(request, 'order.html', {'cart_items': cart_items, 'form': form})
     else:
         form = OrderForm()
-    return render(request, 'order.html', {'cart': cart, 'form': form})
-
-
+    return render(request, 'order.html', {'form': form})
+    
 # 개같이 멸망!
 def order_view(request):
     if request.method == 'POST':

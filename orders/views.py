@@ -25,7 +25,7 @@ def order_page(request):
                                          image_url=item['image_url'])
             print(order)
             order.save()
-            return render(request, 'order.html')
+            return render(request, 'checkout.html')
     else:
         form = OrderForm()
     return render(request, 'order.html', {'order_form': form,'cart_items':cart_items,'total_price':total_price})

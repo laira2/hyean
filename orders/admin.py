@@ -1,13 +1,25 @@
-# orders/admin.py
 from django.contrib import admin
-from .models import Order,OrderItem
+from .models import Order, OrderItem, Ordered
 
-class OrderItemInline(admin.TabularInline):  # TabularInline을 사용하면 테이블 형식으로 표시됩니다.
+
+class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 0  # 기본적으로 추가할 수 있는 Inline 항목 수, 0으로 설정하면 기본적으로 아무것도 추가되지 않습니다.
+    extra = 1
 
-@admin.register(Order)
+
 class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'name', 'total_price', 'created_at')
+    list_filter = ('created_at', 'user')
+    search_fields = ('user__username', 'name', 'email')
     inlines = [OrderItemInline]
-# Register your models here.
-admin.site.register(OrderItem)
+
+
+class OrderedAdmin(admin.ModelAdmin):
+    list_display = ('order', 'payment_id', 'payment_status', 'paid_amount', 'paid_at')
+    list_filter = ('paid_at', 'payment_status')
+    search_fields = ('order__user__username', 'payment_id')
+
+
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Ordered, OrderedAdmin)
+

@@ -5,7 +5,7 @@
 <div class="container">
     <h1>주문 정보 입력</h1>
     <hr>
-    <form method="post" action="{% url 'payments:checkout' %}" id="order_form">
+    <form method="post" action="{% url 'payments:my_view' %}" id="order_form">
         {% csrf_token %}
         <table class="table">
             <thead>
@@ -21,7 +21,6 @@
             </thead>
             <tbody>
             {% for item in cart_items %}
-
                 <td>
                     <img src="{{ item.image_url }}" alt="{{ art_name }}" style="max-width: 150px;">
                 </td>
@@ -63,7 +62,6 @@
             <label class="form-label">배송지 주소</label>
             {{order_form.address}}
         </div>
-
         <button type="submit" class="btn btn-primary">결제하기</button>
     </form>
 </div>

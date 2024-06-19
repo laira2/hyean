@@ -17,16 +17,28 @@ def order_page(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
-            for item in cart_items:
-                OrderItem.objects.create(order=order,
-                                         artCd=item['artCd'],
-                                         art_name=item['art_name'],
-                                         price=item['price'],
-                                         image_url=item['image_url'])
-            print(order)
             order.save()
-            return render(request, 'checkout.html')
+
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    artCd=item.artCd,
+                    art_name=item.art_name,
+                    quantity=item.quantity,  # Ensure quantity is included if it exists
+                    price=item.price,
+                    image_url=item.image_url
+                )
+
+            # Optionally, clear the cart after saving the order
+            cart.cartaddeditem_set.all().delete()
+
+            return redirect('payments:my_view', order_id=order.id)
     else:
         form = OrderForm()
-    return render(request, 'order.html', {'order_form': form,'cart_items':cart_items,'total_price':total_price})
+
+    return render(request, 'order.html', {
+        'order_form': form,
+        'cart_items': cart_items,
+        'total_price': total_price
+    })
 

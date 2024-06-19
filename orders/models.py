@@ -1,7 +1,9 @@
+# orders/models.py
 from django.db import models
 from django.contrib.auth.models import User
+
 class Order(models.Model):
-    user= models.OneToOneField(User,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     email = models.EmailField()

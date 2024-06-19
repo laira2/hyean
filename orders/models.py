@@ -2,7 +2,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -21,11 +20,9 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image_url = models.URLField()
 
-
 class Ordered(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_status = models.CharField(max_length=20)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
     paid_at = models.DateTimeField(auto_now_add=True)
-    order_number = models.CharField(max_length=100)

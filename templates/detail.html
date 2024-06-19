@@ -1,32 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
 <section>
+     <hr>
+        <div style="text-align:center">
+            <h2><strong>{{ art_name }}</strong></h2>
+        </div>
+     <hr>
+
     <div class="detail_container">
+
         {% if error_message %}
             <h1>{{ error_message }}</h1>
         {% else %}
+
             <div class="detail_image">
-                <img src="{{ file_url }}" alt="{{ art_name }}" class="img-shadow" style="max-width: 500px;">
+                <img src="{{ file_url }}" alt="{{ art_name }}" class="img-shadow" style="max-width: 400px;">
             </div>
             <div class="detail_info">
+
                 <p><strong>일련번호 :</strong> {{ art_info.artCd }}</p>
                 <p><strong>작가명 :</strong> {{ file_name|slice:":4" }}</p>
                 <p><strong>작품명 :</strong> {{ art_name }}</p>
                 <p><strong>작품크기 :</strong> {{ art_dimensions.art_width }} x {{ art_dimensions.art_vrticl }}</p>
                 <p><strong>가격 :</strong> {{ price }}</p>
-            <form method="post" action="{% url 'add_cart' %}">
-                {% csrf_token %}
-                <input type="hidden" name="artCd" value="{{ art_info.artCd }}">
-                <input type="hidden" name="art_name" value="{{ art_name }}">
-                <input type="hidden" name="image_url" value="{{ file_url }}">
-                <input type="hidden" name="price" value="{{price}}">
-                {% if not added %}
-                <button type="submit" class="btn btn-secondary btn-lg">카트 담기</button>
-                {% else %}
-                <p>이미 장바구니에 담긴 작품입니다.</p>
-                {% endif %}
-                <button class="btn btn-secondary btn-lg"><a href="{% url 'index' %}" style="color: white;">다른 작품 보기</a></button>
-            </form>
+                <form method="post" action="{% url 'add_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="artCd" value="{{ art_info.artCd }}">
+                    <input type="hidden" name="art_name" value="{{ art_name }}">
+                    <input type="hidden" name="image_url" value="{{ file_url }}">
+                    <input type="hidden" name="price" value="{{price}}">
+                    {% if not added %}
+                    <button type="submit" class="btn btn-secondary btn-lg">카트 담기</button>
+                    {% else %}
+                    <p>이미 장바구니에 담긴 작품입니다.</p>
+                    {% endif %}
+                    <button class="btn btn-secondary btn-lg"><a href="{% url 'index' %}" style="color: white;">다른 작품 보기</a></button>
+                </form>
             </div>
         {% endif %}
     </div>

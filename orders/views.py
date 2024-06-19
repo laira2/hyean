@@ -14,17 +14,19 @@ def order_page(request):
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
+        print("OrderForm 잘 되는지 확인")
         if form.is_valid():
+
             order = form.save(commit=False)
             order.user = request.user
-            order.save()
+            order.save()  # Save the order first to get the order ID
 
             for item in cart_items:
                 OrderItem.objects.create(
                     order=order,
                     artCd=item.artCd,
                     art_name=item.art_name,
-                    quantity=item.quantity,  # Ensure quantity is included if it exists
+                    quantity=1,  # Ensure quantity is included if it exists
                     price=item.price,
                     image_url=item.image_url
                 )
@@ -32,7 +34,7 @@ def order_page(request):
             # Optionally, clear the cart after saving the order
             cart.cartaddeditem_set.all().delete()
 
-            return redirect('payments:my_view', order_id=order.id)
+            return redirect('payments:my_view')
     else:
         form = OrderForm()
 

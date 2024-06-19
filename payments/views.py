@@ -13,7 +13,7 @@ def my_view(request):
     context = {
         'toss_payments_client_key': os.getenv('TOSS_PAYMENTS_CLIENT_KEY')
     }
-    return render(request, 'checkout.html', context)
+    return render(request, 'payments/checkout.html', context)
 
 def checkout_view(request):
   

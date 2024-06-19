@@ -40,9 +40,7 @@
             </tr>
       </tbody>
     </table>
-    <form method="post" action="{% url 'order_page' %}">
-        {% csrf_token %}
-        <button class="btn btn-primary" type="submit">주문하기</button>
-    </form>
+
+    <a href="{% url 'order_page' %}"><button class="btn btn-primary" type="submit">주문하기</button></a>
 {% endif %}
 {% endblock %}

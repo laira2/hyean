@@ -14,19 +14,33 @@ def order_page(request):
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
+        print("OrderForm 잘 되는지 확인")
         if form.is_valid():
+
             order = form.save(commit=False)
             order.user = request.user
+            order.save()  # Save the order first to get the order ID
+
             for item in cart_items:
-                OrderItem.objects.create(order=order,
-                                         artCd=item['artCd'],
-                                         art_name=item['art_name'],
-                                         price=item['price'],
-                                         image_url=item['image_url'])
-            print(order)
-            order.save()
-            return render(request, 'checkout.html')
+                OrderItem.objects.create(
+                    order=order,
+                    artCd=item.artCd,
+                    art_name=item.art_name,
+                    quantity=1,  # Ensure quantity is included if it exists
+                    price=item.price,
+                    image_url=item.image_url
+                )
+
+            # Optionally, clear the cart after saving the order
+            cart.cartaddeditem_set.all().delete()
+
+            return redirect('payments:my_view')
     else:
         form = OrderForm()
-    return render(request, 'order.html', {'order_form': form,'cart_items':cart_items,'total_price':total_price})
+
+    return render(request, 'order.html', {
+        'order_form': form,
+        'cart_items': cart_items,
+        'total_price': total_price
+    })
 

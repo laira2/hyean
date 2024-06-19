@@ -5,7 +5,7 @@
 <div class="container">
     <h1>주문 정보 입력</h1>
     <hr>
-    <form method="post" action="{% url 'payments:checkout' %}" id="order_form">
+    <form method="post" action="{% url 'order_page' %}" id="order_form">
         {% csrf_token %}
         <table class="table">
             <thead>

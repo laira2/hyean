@@ -9,22 +9,10 @@ from django.shortcuts import render  #장고에서 HTML 템프릿을 랜더링�
 from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환하는데 사용
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
-from xml.etree import ElementTree
+import xml.etree.ElementTree as ET
 
 from .models import Artwork
 
-
-# def index(request):
-#    return render(request, 'index.html')
-def detail_view(request, art_name):
-    artwork = get_object_or_404(Artwork, name=art_name)
-    return render(request, 'artWork/detail.html', {'artwork': artwork})
-
-
-
-class OpenAPIView:
-    """templates의 openapi.html만 바라보게 하기 위해 사용"""
-    pass
 
 # 이미지 및 작품 데이터 캐싱을 위한 딕셔너리
 cached_data = {
@@ -45,22 +33,29 @@ async def fetch(session, url, cache_key=None, accept='application/json'):
         headers = {'Accept': accept} # HTTP 요청 헤더 설정
         async with session.get(url, headers=headers) as response:  # 비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
             if response.status != 200:  # HTTP 응답 코드가 200(성공)이 아닌 경우
-                return None  # None 반환
+                print(f"fetch 실패 : {url}, 상태값 : {response.status}")
+                return None
 
             content_type = response.headers.get('Content-type', '').lower()
             # 헤더는 서버가 반환한 데이터의 형식(application/json, application/xml)을 나타낸다.
 
-            if accept =='application/json' in content_type:
+            if 'application/json' in content_type:
                 data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
-            elif accept == 'application/xml' in content_type:
+                #print(f"JSON : {data}")
+            elif 'application/xml' in content_type:
                 data = await response.text()
-                data = ElementTree.fromstring(data)
+                root = ET.fromstring(data)
+                items = root.findall('.//item')
+                data = {'response': {'body': {'items': items}}}
+                print(f"XML 정보 : {response}")
             else:
+                print(f"지원되지 않은 콘텐츠 유형 : {content_type}")
                 return None
 
             if cache_key:  # cache_key가 있는 경우 이미지값을 딕셔너리에 저장
                 cached_data['images'][cache_key] = data
             return data  # 캐시키와 이미지값을 호출 시 반환
+
     except aiohttp.ClientError as e:  # aiohttp의 클라이언트 에러 발생 시
         print(f"HTTP 요청 오류: {e}")  # 오류 메시지 출력
         return None  # None 반환
@@ -76,7 +71,7 @@ async def get_data(base_url, session, accept='application/json', page_start=0, p
             "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
             "pageNo": page_no,
             "numOfRows": "10",
-            "returnType": "json",
+            "returnType": "json" if accept == 'application/json' else "xml",
             "engNlty": "Republic of Korea"
         }
         full_url = base_url + '?' + urlencode(params)  # 기본 URL과 매개변수를 조합하여 전체 URL 생성
@@ -87,46 +82,45 @@ async def get_data(base_url, session, accept='application/json', page_start=0, p
     for response in responses:  # 비동기적으로 실행한 HTTP 요청 결과를 담고 있는 리스트로, 반복문 사용
         if response is None:  # 응답이 없는 경우
             continue  # 반복문 계속 진행
-        items = response.get('response', {}).get('body', {}).get('items', [])  # 응답에서 작품 정보를 추출하며, 위 내용중 하나라도 존재하지 않으면 빈 리스트 반환
-        if items:  # 응답에서 추출한 작품 정보가 존재하는지 확인
-            for item in items:  # 작품 정보가 있을 경우 각 작품 정보에 대해 반복
-                art_name = item.get('artNm')  # 작품명 가져오기
-                artCd = item.get('artCd')
-                if art_name:  # 작품명이 존재할 경우
-                    art_name_stripped = art_name.strip()  # 작품명 있을 경우 양쪽 공백 제거 후 변수에 할당
-                    if art_name_stripped:  # 작품명이 존재할 경우
-                        cached_data['art_names'].add(art_name_stripped)  # 캐싱된 데이터에 작품명 추가. 중복된 작품은 추가하지 않는다.
-                        categry = item.get('categry') if item.get('categry') else '기타'  # 작품 카테고리, 없는 경우 기타 입력
-                        cached_data['art_dimensions'][art_name_stripped] = {  # 가로, 세로 값 딕셔너리 저장
-                            'art_width': generate_dimension(), # 가로 랜덤 생성 후 저장
-                            'art_vrticl': generate_dimension(), # 세로 랜덤 생성 후 저장
-                        }
-                        cached_data['art_info'][art_name_stripped] = { # 작품 일련번호, 카테고리 값 딕셔너리 저장
-                            'artCd': artCd, # 작품 일련번호 저장
-                            'categry': categry # 작품 카테고리 저장
-                        }
+        if accept == 'application/json':
+            items = response.get('response', {}).get('body', {}).get('items', [])  # 응답에서 작품 정보를 추출하며, 위 내용중 하나라도 존재하지 않으면 빈 리스트 반환
+            if items:  # 응답에서 추출한 작품 정보가 존재하는지 확인
+                for item in items:  # 작품 정보가 있을 경우 각 작품 정보에 대해 반복
+                    art_name = item.get('artNm')  # 작품명 가져오기
+                    artCd = item.get('artCd')
+                    if art_name:  # 작품명이 존재할 경우
+                        art_name_stripped = art_name.strip()  # 작품명 있을 경우 양쪽 공백 제거 후 변수에 할당
+                        if art_name_stripped:  # 작품명이 존재할 경우
+                            cached_data['art_names'].add(art_name_stripped)  # 캐싱된 데이터에 작품명 추가. 중복된 작품은 추가하지 않는다.
+                            categry = item.get('categry') if item.get('categry') else '기타'  # 작품 카테고리, 없는 경우 기타 입력
+                            cached_data['art_dimensions'][art_name_stripped] = {  # 가로, 세로 값 딕셔너리 저장
+                                'art_width': generate_dimension(), # 가로 랜덤 생성 후 저장
+                                'art_vrticl': generate_dimension(), # 세로 랜덤 생성 후 저장
+                            }
+                            cached_data['art_info'][art_name_stripped] = { # 작품 일련번호, 카테고리 값 딕셔너리 저장
+                                'artCd': artCd, # 작품 일련번호 저장
+                                'categry': categry # 작품 카테고리 저장
+                            }
 
-        elif accept == 'application/xml':
-            data = response
-            # XML 데이터 처리 로직 추가
-            root = ElementTree.fromstring(data)
-            items = root.findall('.//item')
-            for item in items:
-                art_name = item.findtext('artNm')
-                artCd = item.findtext('artCd')
-                if art_name:
-                    art_name_stripped = art_name.strip()
-                    if art_name_stripped:
-                        cached_data['art_names'].add(art_name_stripped)
-                        categry = item.findtext('categry') if item.findtext('categry') else '기타'
-                        cached_data['art_dimensions'][art_name_stripped] = {
-                            'art_width': generate_dimension(),
-                            'art_vrticl': generate_dimension(),
-                        }
-                        cached_data['art_info'][art_name_stripped] = {
-                            'artCd': artCd,
-                            'categry': categry
-                        }
+            elif accept == 'application/xml':
+                items = root.findall('.//item')
+                print(f"xml : {items}")
+                for item in items:
+                    art_name = item.findtext('artNm')
+                    artCd = item.findtext('artCd')
+                    if art_name:
+                        art_name_stripped = art_name.strip()
+                        if art_name_stripped:
+                            cached_data['art_names'].add(art_name_stripped)
+                            categry = item.findtext('categry') if item.findtext('categry') else '기타'
+                            cached_data['art_dimensions'][art_name_stripped] = {
+                                'art_width': generate_dimension(),
+                                'art_vrticl': generate_dimension(),
+                            }
+                            cached_data['art_info'][art_name_stripped] = {
+                                'artCd': artCd,
+                                'categry': categry
+                            }
 
         else:
             continue
@@ -137,22 +131,39 @@ async def get_image_data(image_api_url, session):
     tasks = []  # 비동기 작업들을 저장할 빈 리스트 생성
 
     for art_name in cached_data['art_names']:  # 이미지를 가져올 작품명을 반복하여 가져옴
-        image_params = {  # 이미지를 가져오기 위한 파라미터 설정
+        json_params = {  # 이미지를 가져오기 위한 파라미터 설정
             "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
             "pageNo": "1",
             "numOfRows": "10",
             "returnType": "json",
             "artNm": art_name
         }
-        full_url = image_api_url + '?' + urlencode(image_params)  # 이미지 API의 전체 URL 생성
-        tasks.append(fetch(session, full_url, cache_key=full_url))  # 이미지 데이터를 가져오는 비동기 함수 fetch 호출
+        json_url = image_api_url + '?' + urlencode(json_params)  # JSON API의 전체 URL 생성
+        tasks.append(fetch(session, json_url, cache_key=json_url))  # JSON 데이터를 가져오는 비동기 함수 fetch 호출
+
+        # XML 요청 파라미터 설정
+        xml_params = {
+            "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+            "pageNo": "1",
+            "numOfRows": "10",
+            "returnType": "xml",
+            "artNm": art_name
+        }
+        xml_url = image_api_url + '?' + urlencode(xml_params)  # XML API의 전체 URL 생성
+        tasks.append(fetch(session, xml_url, cache_key=xml_url))  # XML 데이터를 가져오는 비동기 함수 fetch 호출
 
     responses = await asyncio.gather(*tasks)  # tasks 리스트에 있는 모든 비동기 작업을 동시에 실행
 
-    for image_response in responses:
-        if image_response:  # 이미지 응답이 존재하는 경우
-            image_data = image_response.get('response', {}).get('body', {}).get('items', [])  # 이미지 데이터가 있는지 확인
-            if image_data:  # 이미지 데이터가 있는 경우
+    for response in responses:
+        if response:  # 응답이 존재하는 경우
+            if isinstance(response, dict): # json 응답인 경우
+                image_data = response.get('response', {}).get('body', {}).get('items', [])  # 이미지 데이터가 있는지 확인
+            else: # xml 응답인 경우
+                root = ET.fromstring(response)
+                items = root.findall('.//item')
+                image_data = [{'artNm': item.findtext('artNm'), 'fileNm': item.findtext('fileNm'), 'fileUrl': item.findtext('fileUrl'), 'artCd': item.findtext('artCd')} for item in items]
+
+            if image_data: # 이미지 데이터가 있는 경우
                 for image_item in image_data:  # 이미지 항목을 반복하여 가져옴
                     art_name = image_item.get('artNm', '')  # 작품명 가져오기
                     file_name = image_item.get('fileNm', '')  # 파일명 가져오기

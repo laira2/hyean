@@ -1,20 +1,31 @@
 import os
+from django.http import HttpResponseBadRequest
 import base64
 import json
 import requests
 from django.shortcuts import render
 from dotenv import load_dotenv
 from orders.models import Ordered
+from orders.models import Order
 from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()
 
-def my_view(request):
+def my_view(request, order_id):
+    order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+    item = order.orderitem_set.first()
+    print(f"my_view의 item : {item}")
     context = {
-        'toss_payments_client_key': os.getenv('TOSS_PAYMENTS_CLIENT_KEY')
-    }
+            'order_id': order_id,
+            'email': order.email,
+            'name': order.name,
+            'phone': order.phone,
+            'total_price': order.total_price,
+            'artCd': item.artCd,
+            'toss_payments_client_key': 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
+        }
+    print(f"my_view의 context : {context}")
     return render(request, 'payments/checkout.html', context)
-
 def checkout_view(request):
   
     return render(request, 'payments/checkout.html',)

@@ -1,5 +1,7 @@
 # orders/views.py
 from django.shortcuts import render, redirect, get_object_or_404
+import os
+from django.urls import reverse
 from .forms import OrderForm
 from django.utils import timezone
 from .models import Order, OrderItem
@@ -24,9 +26,10 @@ def order_page(request):
 
             # Generate unique order_id
             timestamp_str = timezone.now().strftime("%Y%m%d%H%M%S")
-            order_id = f"ORD-{timestamp_str}-{order.user.id}"
+            order_id = f"{timestamp_str}{order.user.id}"
 
             for item in cart_items:
+                print(item.art_name)
                 OrderItem.objects.create(
                     order=order,
                     artCd=item.artCd,
@@ -35,6 +38,16 @@ def order_page(request):
                     price=item.price,
                     image_url=item.image_url
                 )
+
+            context = {
+                'order_id': order_id,
+                'email': form.cleaned_data['email'],
+                'name': form.cleaned_data['name'],
+                'phone': form.cleaned_data['phone'],
+                'total_price': total_price,
+                'toss_payments_client_key': ('test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm')
+            }
+            print(f"context : {context}")
 
             # Optionally, clear the cart after saving the order
             cart.cartaddeditem_set.all().delete()

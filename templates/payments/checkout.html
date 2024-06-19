@@ -27,9 +27,9 @@
 <script>
     var tossPaymentsClientKey = "{{ toss_payments_client_key }}";
     const button = document.getElementById("payment-button");
-    const amount = 1000;
+    const amount = {{ total_price }};
     const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-    const customerKey = "111111111111111111111111111";
+    const customerKey = "{{ order_id }}";
     const paymentWidget = PaymentWidget(widgetClientKey, customerKey);
 
     paymentWidget.renderPaymentMethods("#payment-method", { value: amount });
@@ -37,13 +37,13 @@
 
     button.addEventListener("click", function () {
         paymentWidget.requestPayment({
-            orderId: "1111111111111111111111111111111111",
-            orderName: "너의 눈, 코, 입",
+            orderId: "{{ order_id }}",
+            orderName: "{{ item.artCd }}"
             successUrl: window.location.origin + "/success/",
             failUrl: window.location.origin + "/fail",
-            customerEmail: "isyouh77@gmail.com",
-            customerName: "긴또깡",
-            customerMobilePhone: "01082828282",
+            customerEmail: "{{ email }}",
+            customerName: "{{ name }}",
+            customerMobilePhone: "{{ phone }}",
         });
     });
 </script>

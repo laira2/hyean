@@ -5,6 +5,7 @@ from django.shortcuts import render  # 장고에서 HTML 템플릿을 렌더링�
 from urllib.parse import urlencode  # 딕셔너리를 쿼리 문자열로 변환하는데 사용
 import hashlib  # 해시 함수 모듈
 import time  # 시간 함수 모듈
+from xml.etree import ElementTree
 
 class OpenAPIView:
     """templates의 openapi.html만 바라보게 하기 위해 사용"""
@@ -18,7 +19,7 @@ cached_data = {
     'art_info': {}  # 작품 id, 카테고리 정보를 저장하기 위한 빈 딕셔너리
 }
 
-async def fetch(session, url, cache_key=None):
+async def fetch(session, url, cache_key=None, accept='application/json'):
     """비동기적으로 데이터를 가져오고 캐싱처리 진행"""
     global cached_data  # 함수 내에서 cached_data를 수정하기 위해 전역변수 선언
 
@@ -26,21 +27,35 @@ async def fetch(session, url, cache_key=None):
         return cached_data['images'][cache_key]  # 캐시된 데이터 반환
 
     try:
-        async with session.get(url) as response:  # 비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
+        headers = {'Accept': accept}
+        async with session.get(url, headers=headers) as response:  # 비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
             if response.status != 200:  # HTTP 응답 코드가 200(성공)이 아닌 경우
                 return None  # None 반환
-            data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
+
+            content_type = response.headers.get('Content-type', '').lower()
+
+            if accept =='application/json' in content_type:
+                data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
+            elif accept == 'application/xml' in content_type:
+                data = await response.text()
+                data = ElementTree.fromstring(data)
+            else:
+                return None
+
             if cache_key:  # cache_key가 있는 경우 이미지값을 딕셔너리에 저장
                 cached_data['images'][cache_key] = data
             return data  # 캐시키와 이미지값을 호출 시 반환
     except aiohttp.ClientError as e:  # aiohttp의 클라이언트 에러 발생 시
         print(f"HTTP 요청 오류: {e}")  # 오류 메시지 출력
         return None  # None 반환
+    except Exception as e:
+        print(f"예기치 않은 오류 발생: {e}")
+        return None
 
-async def get_data(base_url, session):
+async def get_data(base_url, session, accept='application/json', page_start=0, page_end=5):
     """비동기적으로 기본 데이터를 가져오고 캐싱"""
     tasks = []  # 비동기 작업들을 저장할 빈 리스트 생성
-    for page_number in range(0, 5):  # 0부터 4까지의 페이지에 대해 반복
+    for page_number in range(page_start, page_end):  # 0부터 4까지의 페이지에 대해 반복
         params = {  # API 요청을 위한 파라미터 설정
             "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
             "pageNo": str(page_number),
@@ -49,31 +64,59 @@ async def get_data(base_url, session):
             "engNlty": "Republic of Korea"
         }
         full_url = base_url + '?' + urlencode(params)  # 기본 URL과 매개변수를 조합하여 전체 URL 생성
-        tasks.append(fetch(session, full_url))  # 비동기 함수를 호출하여 생성된 URL에서 데이터를 가져오는 작업 생성 후 tasks 리스트에 추가
+        tasks.append(fetch(session, full_url, accept=accept))  # 비동기 함수를 호출하여 생성된 URL에서 데이터를 가져오는 작업 생성 후 tasks 리스트에 추가
 
     responses = await asyncio.gather(*tasks)  # tasks 리스트에 있는 모든 비동기 작업을 동시에 실행
 
     for response in responses:  # 비동기적으로 실행한 HTTP 요청 결과를 담고 있는 리스트로, 반복문 사용
         if response is None:  # 응답이 없는 경우
             continue  # 반복문 계속 진행
-        items = response.get('response', {}).get('body', {}).get('items', [])  # 응답에서 작품 정보를 추출하며, 위 내용중 하나라도 존재하지 않으면 빈 리스트 반환
-        if items:  # 응답에서 추출한 작품 정보가 존재하는지 확인
-            for item in items:  # 작품 정보가 있을 경우 각 작품 정보에 대해 반복
-                art_name = item.get('artNm')  # 작품명 가져오기
-                artCd = item.get('artCd')
-                if art_name:  # 작품명이 존재할 경우
-                    art_name_stripped = art_name.strip()  # 작품명 있을 경우 양쪽 공백 제거 후 변수에 할당
-                    if art_name_stripped:  # 작품명이 존재할 경우
-                        cached_data['art_names'].add(art_name_stripped)  # 캐싱된 데이터에 작품명 추가. 중복된 작품은 추가하지 않는다.
-                        categry = item.get('categry') if item.get('categry') else '기타'  # 작품 카테고리, 없는 경우 기타 입력
-                        cached_data['art_dimensions'][art_name_stripped] = {  # 가로, 세로 값 딕셔너리 저장
-                            'art_width': generate_dimension(), # 가로 랜덤 생성 후 저장
-                            'art_vrticl': generate_dimension(), # 세로 랜덤 생성 후 저장
+
+        if accept == 'application/json':
+            items = response.get('response', {}).get('body', {}).get('items', [])  # 응답에서 작품 정보를 추출하며, 위 내용중 하나라도 존재하지 않으면 빈 리스트 반환
+            #print(f"json : {items}")
+            if items:  # 응답에서 추출한 작품 정보가 존재하는지 확인
+                for item in items:  # 작품 정보가 있을 경우 각 작품 정보에 대해 반복
+                    art_name = item.get('artNm')  # 작품명 가져오기
+                    artCd = item.get('artCd')
+                    if art_name:  # 작품명이 존재할 경우
+                        art_name_stripped = art_name.strip()  # 작품명 있을 경우 양쪽 공백 제거 후 변수에 할당
+                        if art_name_stripped:  # 작품명이 존재할 경우
+                            cached_data['art_names'].add(art_name_stripped)  # 캐싱된 데이터에 작품명 추가. 중복된 작품은 추가하지 않는다.
+                            categry = item.get('categry') if item.get('categry') else '기타'  # 작품 카테고리, 없는 경우 기타 입력
+                            cached_data['art_dimensions'][art_name_stripped] = {  # 가로, 세로 값 딕셔너리 저장
+                                'art_width': generate_dimension(), # 가로 랜덤 생성 후 저장
+                                'art_vrticl': generate_dimension(), # 세로 랜덤 생성 후 저장
+                            }
+                            cached_data['art_info'][art_name_stripped] = { # 작품 일련번호, 카테고리 값 딕셔너리 저장
+                                'artCd': artCd, # 작품 일련번호 저장
+                                'categry': categry # 작품 카테고리 저장
+                            }
+        elif accept == 'application/xml':
+            data = response
+            print(f"xml : {data}")
+            # 여기에 XML 데이터 처리 로직 추가
+            root = ElementTree.fromstring(data)
+            items = root.findall('.//item')
+            for item in items:
+                art_name = item.findtext('artNm')
+                artCd = item.findtext('artCd')
+                if art_name:
+                    art_name_stripped = art_name.strip()
+                    if art_name_stripped:
+                        cached_data['art_names'].add(art_name_stripped)
+                        categry = item.findtext('categry') if item.findtext('categry') else '기타'
+                        cached_data['art_dimensions'][art_name_stripped] = {
+                            'art_width': generate_dimension(),
+                            'art_vrticl': generate_dimension(),
                         }
-                        cached_data['art_info'][art_name_stripped] = { # 작품 일련번호, 카테고리 값 딕셔너리 저장
-                            'artCd': artCd, # 작품 일련번호 저장
-                            'categry': categry # 작품 카테고리 저장
+                        cached_data['art_info'][art_name_stripped] = {
+                            'artCd': artCd,
+                            'categry': categry
                         }
+
+        else:
+            continue
 
 async def get_image_data(image_api_url, session):
     """비동기적으로 이미지 데이터를 가져오고 캐싱"""

@@ -9,6 +9,7 @@ from django.shortcuts import render  #장고에서 HTML 템프릿을 랜더링�
 from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환하는데 사용
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
+from xml.etree import ElementTree
 
 from .models import Artwork
 
@@ -33,7 +34,7 @@ cached_data = {
     'art_info': {}  # 작품 id, 카테고리 정보를 저장하기 위한 빈 딕셔너리
 }
 
-async def fetch(session, url, cache_key=None):
+async def fetch(session, url, cache_key=None, accept='application/json'):
     """비동기적으로 데이터를 가져오고 캐싱처리 진행"""
     global cached_data  # 함수 내에서 cached_data를 수정하기 위해 전역변수 선언
 
@@ -41,18 +42,33 @@ async def fetch(session, url, cache_key=None):
         return cached_data['images'][cache_key]  # 캐시된 데이터 반환
 
     try:
-        async with session.get(url) as response:  # 비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
+        headers = {'Accept': accept} # HTTP 요청 헤더 설정
+        async with session.get(url, headers=headers) as response:  # 비동기 실행 후, 응답을 response 변수에 저장 후 응답대기
             if response.status != 200:  # HTTP 응답 코드가 200(성공)이 아닌 경우
                 return None  # None 반환
-            data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
+
+            content_type = response.headers.get('Content-type', '').lower()
+            # 헤더는 서버가 반환한 데이터의 형식(application/json, application/xml)을 나타낸다.
+
+            if accept =='application/json' in content_type:
+                data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
+            elif accept == 'application/xml' in content_type:
+                data = await response.text()
+                data = ElementTree.fromstring(data)
+            else:
+                return None
+
             if cache_key:  # cache_key가 있는 경우 이미지값을 딕셔너리에 저장
                 cached_data['images'][cache_key] = data
             return data  # 캐시키와 이미지값을 호출 시 반환
     except aiohttp.ClientError as e:  # aiohttp의 클라이언트 에러 발생 시
         print(f"HTTP 요청 오류: {e}")  # 오류 메시지 출력
         return None  # None 반환
+    except Exception as e:
+        print(f"예기치 않은 오류 발생: {e}")
+        return None
 
-async def get_data(base_url, session, page_start=0, page_end=5):
+async def get_data(base_url, session, accept='application/json', page_start=0, page_end=5):
     """비동기적으로 기본 데이터를 가져오고 캐싱"""
     tasks = []  # 비동기 작업들을 저장할 빈 리스트 생성
     for page_no in range(page_start, page_end):  # 0부터 4까지의 페이지에 대해 반복
@@ -64,7 +80,7 @@ async def get_data(base_url, session, page_start=0, page_end=5):
             "engNlty": "Republic of Korea"
         }
         full_url = base_url + '?' + urlencode(params)  # 기본 URL과 매개변수를 조합하여 전체 URL 생성
-        tasks.append(fetch(session, full_url))  # 비동기 함수를 호출하여 생성된 URL에서 데이터를 가져오는 작업 생성 후 tasks 리스트에 추가
+        tasks.append(fetch(session, full_url, accept=accept))  # 비동기 함수를 호출하여 생성된 URL에서 데이터를 가져오는 작업 생성 후 tasks 리스트에 추가
 
     responses = await asyncio.gather(*tasks)  # tasks 리스트에 있는 모든 비동기 작업을 동시에 실행
 
@@ -90,6 +106,30 @@ async def get_data(base_url, session, page_start=0, page_end=5):
                             'categry': categry # 작품 카테고리 저장
                         }
 
+        elif accept == 'application/xml':
+            data = response
+            # XML 데이터 처리 로직 추가
+            root = ElementTree.fromstring(data)
+            items = root.findall('.//item')
+            for item in items:
+                art_name = item.findtext('artNm')
+                artCd = item.findtext('artCd')
+                if art_name:
+                    art_name_stripped = art_name.strip()
+                    if art_name_stripped:
+                        cached_data['art_names'].add(art_name_stripped)
+                        categry = item.findtext('categry') if item.findtext('categry') else '기타'
+                        cached_data['art_dimensions'][art_name_stripped] = {
+                            'art_width': generate_dimension(),
+                            'art_vrticl': generate_dimension(),
+                        }
+                        cached_data['art_info'][art_name_stripped] = {
+                            'artCd': artCd,
+                            'categry': categry
+                        }
+
+        else:
+            continue
 
 async def get_image_data(image_api_url, session):
     """비동기적으로 이미지 데이터를 가져오고 캐싱"""

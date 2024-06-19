@@ -1,6 +1,7 @@
 # orders/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import OrderForm
+from django.utils import timezone
 from .models import Order, OrderItem
 from cart.models import Cart, CartAddedItem
 from django.contrib.auth.decorators import login_required
@@ -21,6 +22,10 @@ def order_page(request):
             order.user = request.user
             order.save()  # Save the order first to get the order ID
 
+            # Generate unique order_id
+            timestamp_str = timezone.now().strftime("%Y%m%d%H%M%S")
+            order_id = f"ORD-{timestamp_str}-{order.user.id}"
+
             for item in cart_items:
                 OrderItem.objects.create(
                     order=order,
@@ -34,7 +39,7 @@ def order_page(request):
             # Optionally, clear the cart after saving the order
             cart.cartaddeditem_set.all().delete()
 
-            return redirect('payments:my_view')
+            return redirect('payments:my_view', order_id=order_id)
     else:
         form = OrderForm()
 

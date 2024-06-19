@@ -36,7 +36,6 @@ def add_cart(request):
             )
         return redirect('cart_detail')
 
-
     except Exception as e:
         print(f"카트 담기 오류: {e}")
         # 오류 처리 및 사용자에게 알림을 위한 로직 추가

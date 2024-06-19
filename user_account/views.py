@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-
 from .form import UserRegisterForm, LoginForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -41,13 +40,13 @@ def user_login(request):
                 return redirect('index')
             else:
                 message="사용할 수 없는 계정입니다."
-                return render(request,'login.html', {'login_form':login_form,'message':message})
         else:
             message = "아이디 또는 비밀번호를 다시 확인해주세요."
-            return render(request, 'login.html', {'login_form': login_form, 'message': message})
     else:
         login_form= LoginForm()
-    return render(request,'login.html', {'login_form':login_form})
+        message=None
+
+    return render(request,'login.html', {'login_form':login_form,'message':message})
 
 
 def signup(request): #회원가입

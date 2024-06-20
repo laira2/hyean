@@ -44,6 +44,26 @@
         </div>
         <div class="account_info" id="order-history">
             <p> 주문 내역</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">주문 일시</th>
+                  <th scope="col">주문 번호</th>
+                  <th scope="col"></th>
+                  <th scope="col">주문 금액</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ordered in ordered_list %}
+                <tr>
+                  <th scope="row">{{ordered.order.created_at}}</th>
+                  <td><a href="">{{ordered.order_number}}</a></td>
+                  <td></td>
+                  <td>{{ordered.order.total_price}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
         </div>
         <div class="account_info" id="gift">
             <p>선물함</p>

@@ -9,7 +9,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     address = models.CharField(max_length=255)
-    total_price = models.DecimalField(max_digits=10000000000, decimal_places=2)
+    total_price = models.DecimalField(max_digits=100000000, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

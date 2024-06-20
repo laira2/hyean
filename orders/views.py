@@ -22,8 +22,9 @@ def order_page(request):
 
             order = form.save(commit=False)
             order.user = request.user
-            order.total_price = cart_total_price
-            order.save()
+            order.total_price = total_price
+            order.save()  # Save the order first to get the order ID
+
 
             timestamp_str = timezone.now().strftime("%Y%m%d%H%M%S")
             order_id = f"{timestamp_str}{order.user.id}"

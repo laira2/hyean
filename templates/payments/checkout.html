@@ -35,7 +35,7 @@
       const coupon = document.getElementById("coupon-box");
       const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
       var amount = {{ total_price }};
-
+      
       const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
       const customerKey = "{{ order_id }}";
       const paymentWidget = PaymentWidget(clientKey, customerKey); // 회원 결제
@@ -44,13 +44,16 @@
       paymentMethodWidget = paymentWidget.renderPaymentMethods(
         "#payment-method",
         { value: amount },
-
         { variantKey: "DEFAULT" }
       );
+      
+      paymentWidget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
+
       paymentMethodWidget.on("ready", function () {
         button.disabled = false;
         coupon.disabled = false;
       });
+
       coupon.addEventListener("change", function () {
         if (coupon.checked) {
           paymentMethodWidget.updateAmount(amount - 5000);

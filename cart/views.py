@@ -27,7 +27,9 @@ def add_cart(request):
 
         # OrderItem에 존재하는지 확인
         if OrderItem.objects.filter(artCd=artCd).exists():
-            return redirect('index')
+            return render(request, 'detail.html', {
+                'is_sold_out': True,
+            })
 
         # CartAddedItem에 존재하는지 확인
         if CartAddedItem.objects.filter(cart=cart, artCd=artCd).exists():

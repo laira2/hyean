@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
     <div class="login_container">
+        {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
         <div class="login_wrap">
             <h2 class="logo">
                     <a href="#">In site Art Gallery</a>

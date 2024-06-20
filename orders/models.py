@@ -18,7 +18,7 @@ class OrderItem(models.Model):
     artCd = models.CharField(max_length=100)
     art_name = models.CharField(max_length=255)
     quantity = models.IntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10000000000, decimal_places=2)
     image_url = models.URLField()
 
 

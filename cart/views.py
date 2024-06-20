@@ -4,12 +4,19 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from .models import Cart, CartAddedItem
 from orders.models import OrderItem
+from user_account.models import Profile
 
 @login_required
 @require_POST
 def add_cart(request):
     try:
         user = request.user
+
+        # 프로필이 존재하는지 확인
+        if not hasattr(user, 'profile'):
+            # 프로필 생성
+            Profile.objects.create(user=user)
+
         # 사용자의 장바구니 가져오기 또는 생성하기
         cart, created = Cart.objects.get_or_create(user=user)
 
@@ -35,7 +42,6 @@ def add_cart(request):
                 image_url=image_url
             )
         return redirect('cart_detail')
-
 
     except Exception as e:
         print(f"카트 담기 오류: {e}")

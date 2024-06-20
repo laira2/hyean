@@ -54,12 +54,12 @@
                 </tr>
               </thead>
               <tbody>
-                {% for orderlist in ordered %}
+                {% for ordered in ordered_list %}
                 <tr>
-                  <th scope="row">{{orderlist.paid_at}}</th>
-                  <td>{{orderlist.order_number}}</td>
-                  <td>{{Otto}}</td>
-                  <td>@mdo</td>
+                  <th scope="row">{{ordered.order.created_at}}</th>
+                  <td><a href="">{{ordered.order_number}}</a></td>
+                  <td></td>
+                  <td>{{ordered.order.total_price}}</td>
                 </tr>
                 {% endfor %}
               </tbody>

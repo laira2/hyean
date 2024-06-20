@@ -63,8 +63,10 @@
             <label class="form-label">배송지 주소</label>
             {{order_form.address}}
         </div>
-
-        <button type="submit" class="btn btn-primary">결제하기</button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">결제하기</button>
+            <a href="javascript:history.back()"><button class="btn btn-primary" type="button">주문 취소</button></a>
+        </div>
     </form>
 </div>
 <br>

@@ -25,7 +25,7 @@ class OrderItem(models.Model):
 class Ordered(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
-    payment_status = models.CharField(max_length=20)
+    payment_status = models.BooleanField(default=False)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
     paid_at = models.DateTimeField(auto_now_add=True)
     order_number = models.CharField(max_length=100)

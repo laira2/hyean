@@ -3,6 +3,7 @@ from . import views
 from . import detail_page
 from .detail_page import detail_view
 from cart.views import add_cart , cart_detail, cart_remove
+from user_account.views import ordered_detail
 
 urlpatterns = [
     path('add/', add_cart, name="add_cart"),
@@ -17,4 +18,5 @@ urlpatterns = [
     # path('artwork-api/', views.artwork_api, name='artwork_api'),# 예를 들어, index view로 연결
     path('infinite-view/', views.infiniteView, name='infinite-view'),
     path('all-list/', views.all_list_artworks, name='all_list_artworks'),
+    path('ordered_detail/<str:order_number>/', ordered_detail, name='ordered_detail')
 ]

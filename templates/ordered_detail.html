@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+
+    <h1>상세 주문 내역</h1>
+    {% if error_message %}
+    <h1>{{ error_message }}</h1>
+    {%else %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>주문일시 : <span>{{ order.created_at }}</span></th>
+            <th></th>
+            <th>주문번호 : <span>{{ ordered.order_number }}</span></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">작품명</th>
+            <th scope="col"></th>
+            <th scope="col">가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for items in order %}
+        <tr>
+            <td>
+                <img src="{{ items.image_url }}" alt="{{ items.art_name }}" style="max-width: 150px;">
+            </td>
+            <td class="align-middle">{{ items.art_name }}</td>
+            <td class="align-middle"></td>
+            <td class="num align-middle">${{ items.price }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div class="order_wrap" style="text-align: center;">
+
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">이름</th>
+            <th scope="col">전화번호</th>
+            <th scope="col">배송지</th>
+            <th scope="col">이메일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">{{ ordered.order.name }}</th>
+            <td>{{ ordered.order.phone }}</td>
+            <td>{{ ordered.order.address }}</td>
+            <td>{{ ordered.order.email }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="order_info" style="text-align: center; margin: 20px 0;">
+        <a href="{% url 'index' %}">
+            <button class="btn btn-primary" type="submit">메인으로</button>
+        </a>
+    </div>
+</div>
+
+
+{% endblock %}

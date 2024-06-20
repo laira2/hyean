@@ -73,40 +73,23 @@ def account(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     ordered_list=[]
     if orders:
-
         for order in orders:
             ordered_value  = Ordered.objects.filter(order=order)
             ordered_list.extend(ordered_value)
-        print(ordered_list)
+
         return render(request, 'account.html',{'user':user, 'ordered_list':ordered_list})
     else:
         message = "주문 내역이 없습니다."
         return render(request, 'account.html', {'message': message})
 
-def order_list(request):
-    user= request.user
-    ordered = Ordered.objects.filter(user=user)
-    print(ordered)
-    if orders :
+def ordered_detail(request, order_number):
+    print("order_number:",order_number)
+    ordered = Ordered.objects.get(order_number=order_number)
+    print("ordered:", ordered)
+    order = ordered.order.orderitem_set.all()
+    print("order:", order)
 
-        # 주문 내역을 담을 리스트 초기화
-        order_items = []
-        # 각 주문(Order)에 대한 Ordered 객체와 OrderItem 객체 가져오기
-        for order in orders:
-            ordered = Ordered.objects.filter(order=order).first()  # 각 주문에 대한 첫 번째 Ordered 객체 가져오기
-            if ordered:
-                # 각 Ordered 객체에 연결된 OrderItem 객체들 가져오기
-                items = OrderItem.objects.filter(order=ordered.order)
-                order_items.extend(items)
-                return render(request, 'account.html',
-                              {'user': user, 'orders': orders, 'order_items': order_items})
-            else:
-                message ="주문 내역이 없습니다."
-                return render(request, 'account.html',{'message':message})
-    else:
-        message = "주문 내역이 없습니다."
-        return render(request, 'account.html', {'message': message})
-
+    return render (request, 'ordered_detail.html',{'ordered':ordered,'order':order})
 
 @login_required
 def delete_account(request):

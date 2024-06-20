@@ -2,12 +2,13 @@
 {% block content %}
 <section id="account_container">
     <div class="account_wrap">
-        <div class="account_info" id="account_edit">
-
             <form method="post">
                 {% csrf_token %}
                 <table class="table">
                   <thead>
+                      <tr>
+                           <th></th>
+                      </tr>
                     <tr>
                         <strong>내 정보</strong>
                     </tr>
@@ -39,13 +40,12 @@
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit">Update</button>
+                <button type="submit" class="btn btn-primary">회원 정보 수정하기</button>
             </form>
-
-            <a href="{% url 'account_change_password' %}">비밀 번호 변경하기</a>
-
+            <br>
+            <a href="{% url 'account_change_password' %}"><button class="btn btn-primary">비밀 번호 변경하기</button></a>
         </div>
-    </div>
+
 </section>
 
 {% endblock %}

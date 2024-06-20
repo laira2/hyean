@@ -39,7 +39,7 @@ async def fetch(session, url, cache_key=None, accept='application/json'):
             content_type = response.headers.get('Content-type', '').lower()
             # 헤더는 서버가 반환한 데이터의 형식(application/json, application/xml)을 나타낸다.
 
-            if 'application/json' in content_type:
+            if 'application/json' in content_type or 'text/xml' in content_type:
                 data = await response.json()  # 응답객체에서 json 데이터를 비동기적으로 추출 후 data 저장
                 #print(f"JSON : {data}")
             elif 'application/xml' in content_type:
@@ -211,6 +211,10 @@ async def openapi_view(request):
     # 데이터를 정상적으로 불러오지 못한 경우, 빈 리스트 또는 오류 메시지 출력
     if not image_info_list:  # 이미지 정보 리스트가 비어있는 경우
         image_info_list = [{"art_name": "자료 없음", "file_url": "", "price": 0}]  # "No data available" 메시지 출력
+
+    for image_info in image_info_list:
+        if not image_info.get('artCd'):
+            image_info['artCd'] = 'invalid'
 
     return render(request, 'index.html', {'image_info_list': image_info_list})  # 가져온 데이터
 

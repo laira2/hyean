@@ -57,7 +57,7 @@
                 {% for ordered in ordered_list %}
                 <tr>
                   <th scope="row">{{ordered.order.created_at}}</th>
-                  <td><a href="">{{ordered.order_number}}</a></td>
+                  <td><a href="{% url 'ordered_detail' ordered.order_number %}">{{ordered.order_number}}</a></td>
                   <td></td>
                   <td>{{ordered.order.total_price}}</td>
                 </tr>

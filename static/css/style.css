@@ -432,6 +432,7 @@ section {
     background-color: #2FB20F;
     border: 1px solid black;
     color: #fff;
+    font-size: 13px;
 }
 
 .login_btn:hover {

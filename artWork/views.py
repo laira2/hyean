@@ -10,6 +10,7 @@ from urllib.parse import urlencode  #딕셔너리를 쿼리 문자열로 변환�
 from haystack.query import SearchQuerySet
 from django.http import JsonResponse
 import xml.etree.ElementTree as ET
+from django.conf import settings
 
 from .models import Artwork
 
@@ -68,7 +69,7 @@ async def get_data(base_url, session, accept='application/json', page_start=0, p
     tasks = []  # 비동기 작업들을 저장할 빈 리스트 생성
     for page_no in range(page_start, page_end):  # 0부터 4까지의 페이지에 대해 반복
         params = {  # API 요청을 위한 파라미터 설정
-            "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+            "serviceKey": settings.SERVICE_KEY,
             "pageNo": page_no,
             "numOfRows": "10",
             "returnType": "json" if accept == 'application/json' else "xml",
@@ -132,7 +133,7 @@ async def get_image_data(image_api_url, session):
 
     for art_name in cached_data['art_names']:  # 이미지를 가져올 작품명을 반복하여 가져옴
         json_params = {  # 이미지를 가져오기 위한 파라미터 설정
-            "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+            "serviceKey": settings.SERVICE_KEY,
             "pageNo": "1",
             "numOfRows": "10",
             "returnType": "json",
@@ -143,7 +144,7 @@ async def get_image_data(image_api_url, session):
 
         # XML 요청 파라미터 설정
         xml_params = {
-            "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+            "serviceKey": settings.SERVICE_KEY,
             "pageNo": "1",
             "numOfRows": "10",
             "returnType": "xml",
@@ -230,7 +231,7 @@ async def search(request):  # 서치 함수임!!!!!!!!!!!!!!!!!!!!!!!
         async with aiohttp.ClientSession() as session:
             try:
                 image_params = {
-                    "serviceKey": "gKat/nvnmi8i9zoiX+JsGzCTsAV75gkvU71APhj8FbnH3yX4kiZMuseZunM0ZpcvKZaMD0XsmeBHW8dVj8HQxg==",
+                    "serviceKey": settings.SERVICE_KEY,
                     "pageNo": "0",
                     "numOfRows": "100",
                     "returnType": "json",

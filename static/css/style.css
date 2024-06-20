@@ -200,7 +200,6 @@ section {
 .slick_container {
     width: 900px;
     height: 550px;
-    background-color: #ff000020;
     margin: auto;
 }
 
@@ -288,6 +287,14 @@ section {
 
 .img_wrap:hover .img_info {
     display: block
+}
+
+
+
+
+.slide_img_wrap img{
+    margin: auto;
+    object-fit: contain;
 }
 
 /* footer 영역!!!!!! */
@@ -432,6 +439,7 @@ section {
     background-color: #2FB20F;
     border: 1px solid black;
     color: #fff;
+    font-size: 13px;
 }
 
 .login_btn:hover {

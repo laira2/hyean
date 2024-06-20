@@ -22,7 +22,7 @@ def order_page(request):
 
             order = form.save(commit=False)
             order.user = request.user
-            order.total_price = total_price
+            order.total_price = cart_total_price
             order.save()  # Save the order first to get the order ID
 
 

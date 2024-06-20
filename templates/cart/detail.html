@@ -40,9 +40,14 @@
             </tr>
       </tbody>
     </table>
-
-    <a href="{% url 'order_page' %}"><button class="btn btn-primary" type="submit">주문하기</button></a>
-    <a href="{% url 'index' %}"><button class="btn btn-primary" type="submit">계속 쇼핑하기</button></a>
+    <div style="text-align: right;">
+    <a href="{% url 'order_page' %}">
+        <button class="btn btn-primary" type="submit">주문하기</button>
+    </a>
+    <a href="{% url 'index' %}">
+        <button class="btn btn-primary" type="submit">계속 쇼핑하기</button>
+    </a>
+</div>
     <br>
     <br>
 {% endif %}

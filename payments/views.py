@@ -1,47 +1,77 @@
 import os
+from django.http import HttpResponse
 import base64
 import json
 import requests
 from django.shortcuts import render
 from dotenv import load_dotenv
 from orders.models import Ordered
+from orders.models import Order
 from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()
 
-def my_view(request):
+def my_view(request, order_id):
+    order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+    item = order.orderitem_set.first()
+    print(f"my_view의 item : {item}")
     context = {
-        'toss_payments_client_key': os.getenv('TOSS_PAYMENTS_CLIENT_KEY')
-    }
+            'order_id': order_id,
+            'email': order.email,
+            'name': order.name,
+            'phone': order.phone,
+            'total_price': order.total_price,
+            'artCd': item.artCd,
+            'toss_payments_client_key': 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
+        }
+    print(f"my_view의 context : {context}")
     return render(request, 'payments/checkout.html', context)
-
 def checkout_view(request):
   
     return render(request, 'payments/checkout.html',)
+
 
 # 결제가 완료되고 orders/ordered에 저장할 메서드
 @csrf_exempt
 def confirm_payment(request):
     if request.method == 'POST':
-        data = request.json()  # JSON 데이터 가져오기
-        # JSON 데이터에서 필요한 정보 추출
-        paymentKey = data.get('paymentKey')
-        orderId = data.get('orderId')
-        amount = data.get('amount')
-
         try:
-            # Ordered 모델에 저장 예시
-            ordered = Ordered.objects.create(payment_key=paymentKey, order_id=orderId, amount=amount)
+            # 요청 본문을 바이트 문자열로 가져오기
+            request_body = request.body
+
+            # 바이트 문자열을 Python 데이터 구조로 변환
+            data = json.loads(request_body)
+
+            # JSON 데이터에서 필요한 정보 추출
+            payment_id = data.get('paymentKey')
+            payment_status = True  # 결제 성공
+            paid_amount = data.get('amount')
+            order_number = data.get('orderId')
+            print(f"confirm : {data}")
+            print(paid_amount)
+
+            # Order 객체 가져오기
+            order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+            print(f"confirm : {data}")
+
+            # Ordered 모델에 저장
+            ordered = Ordered.objects.create(
+                order=order,
+                payment_id=payment_id,
+                payment_status=payment_status,
+                paid_amount=paid_amount,
+                order_number=order_number
+            )
             ordered.save()
 
-            return JsonResponse({'message': 'Payment confirmed and saved.'}, status=200)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'POST method required.'}, status=405)
-  
-    orderId = request.POST.get('orderId')
-    amount = request.POST.get('amount')
-    return render(request, 'payments/checkout.html', {'orderId': orderId, 'amount': amount})
+            # 템플릿을 렌더링하여 HTTP 응답 반환
+            return render(request, 'account.html', {'message': 'Payment confirmed and saved.'})
+        except (ValueError, KeyError, Exception) as e:
+            # 에러 페이지를 렌더링하여 HTTP 응답 반환
+            return HttpResponse(f'<h1>Error</h1><p>{str(e)}</p>', content_type='text/html', status=500)
+    else:
+        # 405 Method Not Allowed 응답 반환
+        return HttpResponse('<h1>Method Not Allowed</h1><p>POST method required.</p>', content_type='text/html', status=405)
 
 def success(request):
     orderId = request.GET.get('orderId')

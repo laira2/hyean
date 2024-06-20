@@ -809,6 +809,10 @@ section {
     margin-top: 20px; /* 폼과 작품 정보 사이의 간격 */
 }
 
+.order_wrap {
+    margin: auto;
+    text-align: center;
+}
 
 
 

@@ -6,7 +6,7 @@ import requests
 from django.shortcuts import render
 from dotenv import load_dotenv
 from orders.models import Ordered
-from orders.models import Order
+from orders.models import Order, OrderItem
 from django.views.decorators.csrf import csrf_exempt
 
 load_dotenv()
@@ -77,6 +77,9 @@ def success(request):
     orderId = request.GET.get('orderId')
     amount = request.GET.get('price')
     paymentKey = request.GET.get('paymentKey')
+    order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+    order_items = OrderItem.objects.filter(order=order)
+
 
     url = "https://api.tosspayments.com/v1/payments/confirm"
     secretKey = os.getenv('TOSS_PAYMENTS_SECRET_KEY')
@@ -96,7 +99,15 @@ def success(request):
     res = requests.post(url, json=params, headers=headers)
     res.json()  # If you need to use this response, handle it appropriately
 
-    return render(request, "payments/payment_success.html")
+    return render(request, "payments/payment_success.html", {
+        'order_datetime': order.created_at,
+        'name': order.name,
+        'phone': order.phone,
+        'address': order.address,
+        'order_items': order_items,
+        'orderId': orderId,
+        'email': order.email,
+    })
 
 def fail(request):
     code = request.GET.get('code')

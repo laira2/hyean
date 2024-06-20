@@ -18,7 +18,7 @@
     async function confirm() {
         const requestData = { paymentKey, orderId, amount };
 
-        const response = await fetch("/confirm", {
+        const response = await fetch("/confirm/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

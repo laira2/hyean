@@ -43,4 +43,11 @@
     <br>
     <br>
 </section>
+
+{% if is_sold_out %}
+<script>
+    alert('상품이 품절되었습니다.');
+    history.back();
+</script>
+{% endif %}
 {% endblock %}

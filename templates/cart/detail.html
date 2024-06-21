@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
-<h1>나의 카트</h1>
+<section>
+<h1 class="cart_h1">나의 카트</h1>
 {% if error_message %}
-    <h1>{{ error_message }}</h1>
+    <h1 class="null_cart">{{ error_message }}</h1>
 {%else %}
     <table class="table">
         <thead>
@@ -50,5 +50,6 @@
 </div>
     <br>
     <br>
+</section>
 {% endif %}
 {% endblock %}

@@ -804,6 +804,14 @@ section {
 
 
 
+/*===========cart/detail.html============= */
+.cart_h1{
+    margin: 30px;
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 
 
 
@@ -840,6 +848,19 @@ section {
 .order_wrap {
     margin: auto;
     text-align: center;
+}
+
+
+
+
+/*--=========카트에 담긴 제품 없을 때 페이지========== */
+.null_cart{
+    text-align: center;
+    font-size: 25px;
+    margin: 100px 0 100px 0;
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 

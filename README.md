@@ -1,5 +1,5 @@
 #미술품 판매 사이트 혜안
-...
+
 ```mermaid
   gantt
     title A Gantt Diagram
@@ -17,12 +17,3 @@
     section 문서 작성
     발표 준비 : 2024-06-20, 2d
 ```
-
-<<<<<<< HEAD
-=======
-
-README TEST
-```
-
-한번더 test
->>>>>>> 15eb2b9a57a6374a0ab4842119a6c4990606e8ee
